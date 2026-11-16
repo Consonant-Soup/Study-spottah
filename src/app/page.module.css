@@ -1,141 +1,226 @@
 .page {
-  --background: #fafafa;
-  --foreground: #fff;
-
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
-  min-height: 100vh;
-  align-items: center;
-  justify-content: center;
+  flex: 1;
+  background: #f7faf9;
+  color: #173a35;
   font-family: var(--font-geist-sans);
-  background-color: var(--background);
 }
 
-.main {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
+.eyebrow {
+  margin-bottom: 0.75rem;
+  color: #527a70;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.heading {
+  max-width: 39rem;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-weight: 650;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
 }
 
 .intro {
+  max-width: 34rem;
+  margin: 1.25rem 0 1.75rem;
+  color: #60736e;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.actions {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
-.intro h1 {
-  max-width: 320px;
-  font-size: 40px;
-  font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
-}
-
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
-  line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
-}
-
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.ctas {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
-  font-size: 14px;
-}
-
-.ctas a {
-  display: flex;
-  justify-content: center;
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  min-height: 3rem;
   align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
+  justify-content: center;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid #245e50;
+  border-radius: 0.65rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
-  gap: 8px;
+.primaryButton {
+  background: #245e50;
+  color: #fff;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.primaryButton:hover {
+  background: #184a3f;
+  color: #fff;
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
-  }
-
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
-  }
+.secondaryButton {
+  background: transparent;
+  color: #245e50;
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
-  }
-
-  .intro {
-    gap: 16px;
-  }
-
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
-  }
+.secondaryButton:hover {
+  background: #e7f0ec;
+  color: #184a3f;
 }
 
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
+.mapCard {
+  overflow: hidden;
+  border: 1px solid #d6e3de;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1.25rem 3rem rgb(26 63 54 / 8%);
+}
+
+.mapHeader,
+.mapFooter {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  color: #71817c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.mapStatus {
+  color: #578477;
+}
+
+.map {
+  position: relative;
+  height: 20rem;
+  overflow: hidden;
+  background-color: #eaf1ed;
+  background-image: linear-gradient(34deg, transparent 48%, #d2e0d9 49%, #d2e0d9 51%, transparent 52%),
+    linear-gradient(145deg, transparent 46%, #d9e6df 47%, #d9e6df 50%, transparent 51%),
+    repeating-linear-gradient(90deg, transparent, transparent 3.8rem, rgb(255 255 255 / 55%) 3.9rem, rgb(255 255 255 / 55%) 4rem),
+    repeating-linear-gradient(0deg, transparent, transparent 3.8rem, rgb(255 255 255 / 55%) 3.9rem, rgb(255 255 255 / 55%) 4rem);
+}
+
+.roadOne,
+.roadTwo,
+.roadThree {
+  position: absolute;
+  display: block;
+  width: 130%;
+  height: 0.8rem;
+  border: 2px solid #fff;
+  border-right: 0;
+  border-left: 0;
+  background: #d3e2dc;
+}
+
+.roadOne {
+  top: 28%;
+  left: -10%;
+  transform: rotate(-15deg);
+}
+
+.roadTwo {
+  top: 65%;
+  left: -12%;
+  transform: rotate(17deg);
+}
+
+.roadThree {
+  top: 45%;
+  left: -17%;
+  transform: rotate(72deg);
+}
+
+.mapPin {
+  position: absolute;
+  z-index: 1;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #327564;
+  box-shadow: 0 2px 8px rgb(23 58 53 / 25%);
+}
+
+.pinOne {
+  top: 31%;
+  left: 30%;
+}
+
+.pinTwo {
+  top: 56%;
+  left: 62%;
+}
+
+.pinThree {
+  top: 25%;
+  left: 74%;
+}
+
+.mapLabel {
+  position: absolute;
+  right: 12%;
+  bottom: 12%;
+  color: #71817c;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.mapFooter {
+  color: #53746a;
+  font-size: 0.7rem;
+  letter-spacing: 0;
+}
+
+.featureSection {
+  margin-top: 6rem;
+}
+
+.sectionHeading {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 650;
+  letter-spacing: -0.04em;
+}
+
+.featureCard {
+  height: 100%;
+  padding: 1.5rem;
+  border: 1px solid #dce7e2;
+  border-radius: 0.85rem;
+  background: #fff;
+}
+
+.featureNumber {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #679386;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.featureCard h3 {
+  font-size: 1.1rem;
+  font-weight: 650;
+}
+
+.featureCard p {
+  margin: 0;
+  color: #687a75;
+  line-height: 1.6;
+}
+
+@media (max-width: 575px) {
+  .map {
+    height: 16rem;
   }
 
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
+  .featureSection {
+    margin-top: 4rem;
   }
 }

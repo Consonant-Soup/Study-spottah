@@ -8,6 +8,7 @@ const Home = () => (
 
         <Col xs={8} className="d-flex flex-column justify-content-center">
           <Image src="/images/mockup-homepage.png" width=".9vw" alt="" />
+          <p>test edit on vercel deployment</p>
         </Col>
       </Row>
     </Container>

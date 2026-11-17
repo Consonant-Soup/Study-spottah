@@ -6,7 +6,11 @@ const spots = [
   { name: 'Study spot 3', detail: 'Open now' },
 ];
 
-const SpotsList = () => (
+type SpotsListProps = {
+  onSpotSelect?: (spotName: string) => void;
+};
+
+const SpotsList = ({ onSpotSelect }: SpotsListProps) => (
   <section className={styles.listCard} aria-label="Study spot list wireframe">
     <div className={styles.listHeader}>
       <span>STUDY SPOTS</span>
@@ -15,11 +19,27 @@ const SpotsList = () => (
     <ul className={styles.list}>
       {spots.map((spot) => (
         <li className={styles.listItem} key={spot.name}>
-          <span className={styles.spotIcon} aria-hidden="true" />
-          <span>
-            <strong>{spot.name}</strong>
-            <small>{spot.detail}</small>
-          </span>
+          {onSpotSelect ? (
+            <button
+              className={styles.spotButton}
+              type="button"
+              onClick={() => onSpotSelect(spot.name)}
+            >
+              <span className={styles.spotIcon} aria-hidden="true" />
+              <span>
+                <strong>{spot.name}</strong>
+                <small>{spot.detail}</small>
+              </span>
+            </button>
+          ) : (
+            <>
+              <span className={styles.spotIcon} aria-hidden="true" />
+              <span>
+                <strong>{spot.name}</strong>
+                <small>{spot.detail}</small>
+              </span>
+            </>
+          )}
         </li>
       ))}
     </ul>

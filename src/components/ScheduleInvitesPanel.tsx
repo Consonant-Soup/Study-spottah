@@ -30,7 +30,7 @@ const sampleInvitations: Invitation[] = [
   {
     id: 2,
     host: 'Tishya Chhabra',
-    username: '@noahk',
+    username: '@tischh',
     spot: 'Study spot 1',
     date: 'Fri, Nov 20',
     time: '10:00 AM–12:00 PM',

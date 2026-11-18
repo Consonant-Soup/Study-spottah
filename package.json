@@ -33,7 +33,7 @@
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.26.21",
     "ts-node": "^10.9.2",
-    "lucide-react": "^0.468.0"
+    "lucide-react": "^0.468.0",
     "react-leaflet": "^5.0.0",
     "yup": "^1.7.1"
   },

@@ -12,7 +12,7 @@ import styles from './page.module.css';
 const Home = () => (
   <main className={styles.page}>
     <Container className="py-5">
-      <Row className="align-items-center gy-5">
+      {/* <Row className="align-items-center gy-5">
         <Col lg={6}>
           <p className={styles.eyebrow}>Find your next study spot</p>
           <h1 className={styles.heading}>A better place to focus is closer than you think.</h1>
@@ -27,7 +27,7 @@ const Home = () => (
         <Col lg={6}>
           <SpotsPanel />
         </Col>
-      </Row>
+      </Row> */}
 
       <section className={styles.featureSection}>
         <p className={styles.eyebrow}>Make room for good work</p>

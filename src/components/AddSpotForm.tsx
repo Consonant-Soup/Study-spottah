@@ -1,8 +1,9 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
+import styles from './AddSpotForm.module.css';
 
 const MAJORS = ['Engineering', 'Bio', 'Math'] as const;
 
@@ -21,29 +22,43 @@ const YES_NO_FIELDS = [
 ] as const;
 
 const AddSpotForm: React.FC = () => {
+  const [showOtherMajor, setShowOtherMajor] = useState(false);
+
   const handleMockSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     swal('Mockup Submitted', 'This is a UI preview. No data was sent to the database.', 'info');
   };
 
   return (
-    <div style={{ backgroundColor: '#ffffff', color: '#000000', minHeight: '100vh' }}>
+    <div className={styles.page}>
       <Container className="py-4">
         <Row className="justify-content-center">
           <Col xs={12} md={6}>
-            <Col className="text-center mb-3">
-              <h2 className="fw-bold" style={{ color: '#000000' }}>
-                Add Spots
+            <Col className="mb-3">
+              <span className={styles.eyebrow}>CONTRIBUTE</span>
+              <h2 className={styles.heading}>
+                Add a Spot
               </h2>
             </Col>
 
-            <Card className="rounded-0 theme-card" style={{ backgroundColor: '#ffffff' }}>
-              <Card.Header className="rounded-0 theme-header fw-bold">
+            <Card className={`rounded-0 ${styles.card}`}>
+              <Card.Header className={`rounded-0 ${styles.header}`}>
                 New Study Spot Details
               </Card.Header>
 
-              <Card.Body style={{ color: '#000000' }}>
+              <Card.Body>
                 <Form onSubmit={handleMockSubmit}>
+                  {/* Name */}
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-semibold">Name</Form.Label>
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="e.g., Hamilton Quiet Zone"
+                      className="form-control rounded-0"
+                    />
+                  </Form.Group>
+
                   {/* Location */}
                   <Form.Group className="mb-3">
                     <Form.Label className="fw-semibold">Location</Form.Label>
@@ -89,7 +104,27 @@ const AddSpotForm: React.FC = () => {
                           </label>
                         </div>
                       ))}
+                      <div className="form-check form-check-inline">
+                        <input
+                          className="form-check-input rounded-0"
+                          type="checkbox"
+                          id="major-other"
+                          checked={showOtherMajor}
+                          onChange={(e) => setShowOtherMajor(e.target.checked)}
+                        />
+                        <label className="form-check-label" htmlFor="major-other">
+                          Other
+                        </label>
+                      </div>
                     </div>
+                    {showOtherMajor && (
+                      <input
+                        type="text"
+                        name="otherMajor"
+                        placeholder="Type your major"
+                        className="form-control rounded-0 mt-2"
+                      />
+                    )}
                   </Form.Group>
 
                   {/* Yes / No / Unknown Fields */}
@@ -116,12 +151,12 @@ const AddSpotForm: React.FC = () => {
                   <Form.Group className="form-group">
                     <Row className="pt-3">
                       <Col>
-                        <Button type="submit" className="rounded-0 btn-theme-primary w-100">
+                        <Button type="submit" className={`rounded-0 w-100 ${styles.submitBtn}`}>
                           Submit
                         </Button>
                       </Col>
                       <Col>
-                        <Button type="reset" className="rounded-0 btn-theme-reset w-100">
+                        <Button type="reset" className={`rounded-0 w-100 ${styles.resetBtn}`}>
                           Reset
                         </Button>
                       </Col>

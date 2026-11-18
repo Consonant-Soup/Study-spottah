@@ -186,7 +186,7 @@ export default function TransitPage() {
   };
 
   return <div className={styles.page}>
-    <div className={styles.topline}><span>BUILT FOR THE BOWS <span aria-hidden="true">✳</span></span><span>UH MĀNOA • HONOLULU, HI</span></div>
+    <div className={styles.topline}><span>BUILT FOR THE BOWS</span><span>UH MĀNOA • HONOLULU, HI</span></div>
     {/* Shared issue-1 Navbar from src/components/Navbar.tsx is rendered by the root layout. */}
     <main className={styles.main}>
       {/*

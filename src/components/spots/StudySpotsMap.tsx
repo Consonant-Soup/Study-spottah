@@ -15,6 +15,8 @@ import styles from './StudySpotsMap.module.css';
 
 type StudySpotsMapProps = {
   spots?: StudySpot[];
+  center?: [number, number];
+  zoom?: number;
 };
 
 const UH_MANOA_CENTER: [number, number] = [21.2969, -157.8171];
@@ -47,14 +49,18 @@ function SpotPopup({ spot }: { spot: StudySpot }) {
   );
 }
 
-export default function StudySpotsMap({ spots = studySpots }: StudySpotsMapProps) {
+export default function StudySpotsMap({
+  spots = studySpots,
+  center = UH_MANOA_CENTER,
+  zoom = DEFAULT_ZOOM,
+}: StudySpotsMapProps) {
   const spotIcon = createSpotIcon();
 
   return (
     <div className={styles.mapContainer}>
       <MapContainer
-        center={UH_MANOA_CENTER}
-        zoom={DEFAULT_ZOOM}
+        center={center}
+        zoom={zoom}
         className={styles.map}
         scrollWheelZoom
         attributionControl

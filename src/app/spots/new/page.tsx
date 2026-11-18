@@ -1,5 +1,5 @@
 import { loggedInProtectedPage } from '@/lib/page-protection';
-import { auth } from '@/lib/auth';
+// import { auth } from '@/lib/auth';
 import AddSpotForm from '@/components/AddSpotForm';
 
 const AddSpot = async () => {

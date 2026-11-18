@@ -23,7 +23,7 @@ const SpotCard = ({ spot }: SpotCardProps) => {
               {major}
             </Badge>
           ))}
-        </div>
+          </div>
         <p className="mb-0">
           <strong>Noise Level:</strong> {noiseNumber} / 7
         </p>

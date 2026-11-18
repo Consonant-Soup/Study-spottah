@@ -5,6 +5,7 @@
 
 'use client';
 
+import Link from 'next/link';
 import studySpots from './spotData';
 import type { StudySpot } from './spotData';
 import styles from './StudySpotsList.module.css';
@@ -71,6 +72,17 @@ function SpotCard({ spot, onSelect }: { spot: StudySpot; onSelect?: (spot: Study
         <button type="button" className={styles.rowButton} onClick={() => onSelect(spot)}>
           {inner}
         </button>
+      </li>
+    );
+  }
+
+  if (spot.id === 1) {
+    return (
+      <li className={styles.row}>
+        <Link className={styles.rowLink} href="/spots/first-floor-hamilton-library">
+          {inner}
+          <span className={styles.detailsLink}>View details <span aria-hidden="true">→</span></span>
+        </Link>
       </li>
     );
   }

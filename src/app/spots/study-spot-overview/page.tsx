@@ -8,20 +8,27 @@ type StudySpotOverviewProps = {
   searchParams: Promise<{ updated?: string }>;
 };
 
-/** Show every study spot and its full set of stored details to signed-in users. */
+/** Show spot details, bypassing login protection only during development. */
 export default async function StudySpotOverview({ searchParams }: StudySpotOverviewProps) {
-  const session = await auth();
-  loggedInProtectedPage(
-    session as {
-      user: { email: string; id: string; name: string };
-    } | null,
-  );
+  const isProduction = process.env.NODE_ENV === 'production';
+  const session = isProduction ? await auth() : null;
+
+  // Skip the login redirect in development so the overview can be previewed locally.
+  // loggedInProtectedPage(session as { user: { email: string; id: string; name: string } } | null);
+  if (isProduction) {
+    loggedInProtectedPage(
+      session as {
+        user: { email: string; id: string; name: string };
+      } | null,
+    );
+  }
 
   const [spots, params] = await Promise.all([
     prisma.spot.findMany({ orderBy: { location: 'asc' } }),
     searchParams,
   ]);
-  const isAdmin = session?.user?.role === 'ADMIN';
+  // Make the edit form available locally; keep admin-only editing in production.
+  const isAdmin = !isProduction || session?.user?.role === 'ADMIN';
 
   return (
     <main className={styles.page}>

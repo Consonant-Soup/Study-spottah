@@ -83,3 +83,8 @@
   background: #327564;
   box-shadow: 0 0 0 1px #327564, 0 2px 8px rgb(23 58 53 / 25%);
 }
+
+/* SpotList styles */
+.count { margin: 0 0 var(--space-3); font-size: 1.25rem; }
+.grid { display: grid; gap: var(--space-3); }
+.empty { background: var(--color-surface); border: var(--border); padding: var(--space-3); }

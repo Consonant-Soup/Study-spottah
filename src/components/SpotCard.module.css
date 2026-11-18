@@ -1,0 +1,18 @@
+/* SpotCard styles: white card, sharp black border */
+.card {
+  background: var(--color-surface);
+  border: var(--border);
+  border-radius: var(--radius);
+  padding: var(--space-3);
+}
+.header { display: flex; justify-content: space-between; gap: var(--space-2); align-items: start; }
+.name { margin: 0; font-size: 1.1rem; }
+.setting {
+  background: var(--color-secondary);
+  border: var(--border);
+  padding: 0 var(--space-2);
+  white-space: nowrap;
+}
+.building { margin: var(--space-1) 0 var(--space-2); font-weight: 600; }
+.tags { list-style: none; padding: 0; margin: var(--space-3) 0 0; display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.tag { background: var(--color-accent); border: var(--border); padding: 0 var(--space-2); font-size: 0.875rem; }

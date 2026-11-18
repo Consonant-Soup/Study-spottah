@@ -1,4 +1,33 @@
-import styles from './SpotsList.module.css';
+/**
+ * SpotList.tsx
+ * The main listing (2/3 width). Shows a result count, the cards,
+ * or an empty-state message that tells the user how to recover.
+ */
+import SpotCard from "./SpotCard";
+import { Spot } from "../lib/types";
+import styles from "./SpotsList.module.css";
+
+export default function SpotsList({ spots }: { spots: Spot[] }) {
+  return (
+    <section className={styles.list} aria-live="polite">
+      <h2 className={styles.count}>
+        {spots.length} {spots.length === 1 ? "spot" : "spots"} found
+      </h2>
+
+      {spots.length === 0 ? (
+        <p className={styles.empty}>
+          No spots match all of your filters. Remove a filter to see more.
+        </p>
+      ) : (
+        <div className={styles.grid}>
+          {spots.map((spot) => <SpotCard key={spot.id} spot={spot} />)}
+        </div>
+      )}
+    </section>
+  );
+}
+
+/*import styles from './SpotsList.module.css';
 
 const spots = [
   { name: 'Study spot 1', detail: 'Quiet place' },
@@ -46,4 +75,4 @@ const SpotsList = ({ onSpotSelect }: SpotsListProps) => (
   </section>
 );
 
-export default SpotsList;
+export default SpotsList;*/

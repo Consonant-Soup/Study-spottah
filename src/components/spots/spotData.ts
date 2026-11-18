@@ -1,9 +1,10 @@
 /**
  * spotData.ts
- * Static study spot data for UH Manoa campus.
- * Each spot has coordinates, a name, and descriptive tags.
- * Later this can be replaced with a database query.
+ * Study spot data for UH Manoa campus.
+ * Each spot has amenity tags (one per category) plus live indicators.
  */
+
+export type SeatingLevel = 'Totally empty' | 'Many' | 'Some' | 'Very little' | 'None';
 
 export type StudySpot = {
   id: number;
@@ -12,49 +13,117 @@ export type StudySpot = {
   lat: number;
   lng: number;
   tags: string[];
+  noiseLevel: number;
+  seating: SeatingLevel;
 };
 
-/** Sample study spots on UH Manoa campus */
+/** Ordered list of all possible filter tags */
+export const TAG_ORDER: string[] = [
+  'AC', 'Outdoors', 'Outdoors covered',
+  'Food Allowed', 'Outlets', 'Microwave',
+  'Tutors', 'Printer',
+];
+
 const studySpots: StudySpot[] = [
   {
     id: 1,
-    name: 'Hamilton Library',
-    description: 'Main campus library with quiet floors and group rooms.',
+    name: 'First Floor, Hamilton Library',
+    description: 'Main floor with reference desks, group tables, and printing stations.',
     lat: 21.3000,
     lng: -157.8162,
-    tags: ['Quiet', 'Open late'],
+    tags: ['AC', 'Outlets', 'Printer'],
+    noiseLevel: 3,
+    seating: 'Many',
   },
   {
     id: 2,
-    name: 'Sinclair Library',
-    description: 'Smaller library near the art buildings. Good for focused work.',
-    lat: 21.2988,
-    lng: -157.8190,
-    tags: ['Quiet', 'Cozy'],
+    name: 'Fourth Floor Study Area, Hamilton Library',
+    description: 'Quiet upper floor with individual carrels and natural light.',
+    lat: 21.3001,
+    lng: -157.8160,
+    tags: ['AC', 'Outlets'],
+    noiseLevel: 1,
+    seating: 'Some',
   },
   {
     id: 3,
-    name: 'Campus Center',
-    description: 'Central hub with food options and open seating areas.',
-    lat: 21.2990,
-    lng: -157.8175,
-    tags: ['Food nearby', 'Social'],
+    name: 'Learning Commons, Sinclair Library',
+    description: 'Collaborative space with tutoring services and tech support.',
+    lat: 21.2988,
+    lng: -157.8190,
+    tags: ['AC', 'Outlets', 'Tutors', 'Printer'],
+    noiseLevel: 3,
+    seating: 'Many',
   },
   {
     id: 4,
-    name: 'Paradise Palms Cafe',
-    description: 'Cafe with indoor and outdoor seating. Good coffee.',
-    lat: 21.2969,
-    lng: -157.8163,
-    tags: ['Food nearby', 'Outdoor'],
+    name: 'Second Floor Food Court, Campus Center',
+    description: 'Open seating near food vendors. Great for casual study sessions.',
+    lat: 21.2990,
+    lng: -157.8175,
+    tags: ['AC', 'Food Allowed', 'Outlets'],
+    noiseLevel: 6,
+    seating: 'Many',
   },
   {
     id: 5,
-    name: 'POST Building Courtyard',
-    description: 'Covered outdoor area near the science buildings.',
+    name: 'Courtyard, Sakamaki Hall',
+    description: 'Shaded outdoor courtyard between classroom wings.',
+    lat: 21.2985,
+    lng: -157.8178,
+    tags: ['Outdoors covered', 'Food Allowed'],
+    noiseLevel: 4,
+    seating: 'Some',
+  },
+  {
+    id: 6,
+    name: 'Lanai, Paradise Palms',
+    description: 'Covered patio with cafe access. Good coffee and shade.',
+    lat: 21.2969,
+    lng: -157.8163,
+    tags: ['Outdoors covered', 'Food Allowed'],
+    noiseLevel: 5,
+    seating: 'Very little',
+  },
+  {
+    id: 7,
+    name: 'Study Room 301, POST Building',
+    description: 'Reservable group study room near the science departments.',
     lat: 21.2972,
     lng: -157.8155,
-    tags: ['Outdoor', 'Open now'],
+    tags: ['AC', 'Outlets'],
+    noiseLevel: 1,
+    seating: 'Some',
+  },
+  {
+    id: 8,
+    name: 'Great Lawn, McCarthy Mall',
+    description: 'Wide open grass area in the center of campus. Bring a blanket.',
+    lat: 21.2982,
+    lng: -157.8170,
+    tags: ['Outdoors', 'Food Allowed'],
+    noiseLevel: 4,
+    seating: 'Totally empty',
+  },
+  {
+    id: 9,
+    name: 'Computer Lab, Keller Hall',
+    description: 'Lab with workstations, printing, and drop-in tutoring hours.',
+    lat: 21.2975,
+    lng: -157.8148,
+    tags: ['AC', 'Outlets', 'Microwave', 'Tutors', 'Printer'],
+    noiseLevel: 2,
+    seating: 'Very little',
+  },
+  {
+    id: 10,
+    name: 'Student Lounge, Holmes Hall',
+    description: 'Engineering building lounge with couches, microwave, and outlets.',
+    lat: 21.2978,
+    lng: -157.8143,
+    tags: ['AC', 'Food Allowed', 'Outlets', 'Microwave'],
+    noiseLevel: 5,
+    seating: 'Some',
   },
 ];
 

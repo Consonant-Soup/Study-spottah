@@ -1,43 +1,30 @@
 /**
  * SpotsToolbar.tsx
- * Horizontal bar with filter chips on the left and a map/list toggle on the right.
- * Filters are driven by the tags in spotData — selecting a filter narrows
- * which spots appear in the map or list.
+ * "FILTER" label + filter chips (ordered by category) + map/list toggle.
  */
 
 'use client';
 
-import { useState, useCallback } from 'react';
-import studySpots from './spotData';
+import { useCallback } from 'react';
+import { SlidersHorizontal } from 'lucide-react';
+import { TAG_ORDER } from './spotData';
 import styles from './SpotsToolbar.module.css';
 
-/** Collect every unique tag from the spot data */
-const ALL_TAGS = Array.from(
-  new Set(studySpots.flatMap((s) => s.tags)),
-).sort();
-
-/** Which view is active */
 export type SpotsView = 'map' | 'list';
 
 type SpotsToolbarProps = {
-  /** Currently active view */
   view: SpotsView;
-  /** Called when the user toggles between map and list */
   onViewChange: (view: SpotsView) => void;
-  /** Currently active filter tags (empty = show all) */
   activeFilters: string[];
-  /** Called when the user toggles a filter tag */
   onFilterChange: (filters: string[]) => void;
 };
 
-/** Main toolbar component */
 export default function SpotsToolbar({
   view,
   onViewChange,
   activeFilters,
   onFilterChange,
 }: SpotsToolbarProps) {
-  /** Toggle a single filter on or off */
   const toggleFilter = useCallback(
     (tag: string) => {
       if (activeFilters.includes(tag)) {
@@ -49,16 +36,18 @@ export default function SpotsToolbar({
     [activeFilters, onFilterChange],
   );
 
-  /** Switch between map and list */
   const toggleView = useCallback(() => {
     onViewChange(view === 'map' ? 'list' : 'map');
   }, [view, onViewChange]);
 
   return (
     <div className={styles.toolbar}>
-      {/* Filter chips */}
+      <span className={styles.filterLabel}>
+        <SlidersHorizontal size={14} />
+        FILTER
+      </span>
       <div className={styles.filters}>
-        {ALL_TAGS.map((tag) => {
+        {TAG_ORDER.map((tag) => {
           const isActive = activeFilters.includes(tag);
           return (
             <button
@@ -73,8 +62,6 @@ export default function SpotsToolbar({
           );
         })}
       </div>
-
-      {/* Map / list toggle */}
       <button
         type="button"
         className={styles.viewToggle}

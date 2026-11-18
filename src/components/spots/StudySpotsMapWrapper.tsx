@@ -16,17 +16,18 @@ const StudySpotsMapInner = dynamic(() => import('./StudySpotsMap'), {
   loading: () => (
     <div style={{
       width: '100%',
-      height: '100%',
-      minHeight: '200px',
+      height: '24rem',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      background: '#f5f7fc',
+      background: '#f8f9f9',
       color: '#000',
-      fontSize: '0.85rem',
+      fontSize: '11px',
+      fontWeight: 900,
+      letterSpacing: '1px',
     }}
     >
-      Loading map...
+      LOADING MAP...
     </div>
   ),
 });

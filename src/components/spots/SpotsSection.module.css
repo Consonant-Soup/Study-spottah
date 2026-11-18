@@ -1,0 +1,17 @@
+/**
+ * SpotsSection.module.css
+ * Layout for the combined toolbar + map/list area.
+ */
+
+.section {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Map or list fills the remaining space */
+.content {
+  flex: 1;
+  min-height: 0;
+}

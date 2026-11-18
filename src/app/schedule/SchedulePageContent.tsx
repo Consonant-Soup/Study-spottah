@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
-import SpotsPanel from '@/components/SpotsPanel';
+import SpotsSection from '@/components/spots/SpotsSection';
 import ScheduleInvitesPanel from '@/components/ScheduleInvitesPanel';
 import styles from './page.module.css';
 
@@ -39,7 +39,7 @@ const SchedulePageContent = () => {
               <p className={styles.sectionIntro}>
                 Browse the map or switch to the list to pick a place and time.
               </p>
-              <SpotsPanel onSpotSelect={handleSpotSelect} />
+              <SpotsSection onSpotSelect={handleSpotSelect} />
             </section>
           </Col>
           <Col lg={5}>

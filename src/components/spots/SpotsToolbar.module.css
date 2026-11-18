@@ -1,0 +1,73 @@
+/* SpotsToolbar — filter chips + view toggle, Transit visual language. */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1.5px solid #000;
+  background: #fff;
+  flex-wrap: wrap;
+}
+
+.filterLabel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  padding-right: 6px;
+  border-right: 1.5px solid #000;
+  margin-right: 4px;
+}
+
+.filters {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.chip {
+  padding: 10px 13px;
+  font-size: 11px;
+  font-weight: 900;
+  border: 1.5px solid #000;
+  background: #fff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 150ms ease;
+}
+
+.chip:hover {
+  background: #f0f4fb;
+}
+
+.chipActive {
+  background: #91a8eb;
+}
+
+.chipActive:hover {
+  background: #91a8eb;
+}
+
+.viewToggle {
+  flex: 0 0 auto;
+  padding: 10px 13px;
+  border: 1.5px solid #000;
+  background: #7d9946;
+  color: #000;
+  font-size: 11px;
+  font-weight: 900;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .16s, box-shadow .16s;
+}
+
+.viewToggle:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 #000;
+}

@@ -1,0 +1,72 @@
+/* StudySpotsMap — Leaflet map styled in Transit visual language. */
+
+.mapContainer {
+  width: 100%;
+  height: 24rem;
+  position: relative;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Square marker matching Transit pin style */
+.markerIcon {
+  width: 27px;
+  height: 27px;
+  border: 2px solid #000;
+  border-radius: 0;
+  background: #91a8eb;
+  box-shadow: 2px 2px 0 #000;
+}
+
+/* Popup card — sharp, tight */
+.popup {
+  min-width: 10rem;
+  padding: 0.25rem;
+  color: #000;
+  font-family: inherit;
+}
+
+.popupTitle {
+  margin: 0 0 0.25rem;
+  font-size: 13px;
+  font-weight: 950;
+  letter-spacing: -.3px;
+  color: #000;
+}
+
+.popupDesc {
+  margin: 0 0 0.5rem;
+  font-size: 11px;
+  color: #000;
+  line-height: 1.4;
+}
+
+.popupTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.tag {
+  padding: 4px 5px;
+  background: #eff1f2;
+  font-size: 9px;
+  font-weight: 900;
+  border: none;
+  color: #000;
+}
+
+/* Live noise + seating row in popup */
+.popupLive {
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 9px;
+  font-weight: 900;
+  color: #000;
+}

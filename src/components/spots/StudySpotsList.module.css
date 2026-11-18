@@ -1,0 +1,126 @@
+/**
+ * StudySpotsList.module.css
+ * Styles for the study spots list view.
+ * Design guide: sharp corners, #91a8eb main, #8eb3eb accent, #7d9946 secondary, black text.
+ */
+
+/* Outer container — sharp corners, bordered */
+.listContainer {
+  width: 100%;
+  min-height: 24rem;
+  border: 1px solid #91a8eb;
+  background: #fff;
+}
+
+/* Header bar */
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #91a8eb;
+  background: #f5f7fc;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.spotCount {
+  font-weight: 500;
+  letter-spacing: 0;
+  color: #000;
+}
+
+/* List reset */
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Individual spot row */
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #eef3fb;
+  color: #000;
+}
+
+.row:last-child {
+  border-bottom: 0;
+}
+
+/* Clickable row button — fills the row */
+.rowButton {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rowButton:hover {
+  background: #f5f7fc;
+}
+
+.rowButton:focus-visible {
+  outline: 2px solid #91a8eb;
+  outline-offset: -2px;
+}
+
+/* Colored dot beside each spot */
+.spotDot {
+  width: 12px;
+  height: 12px;
+  flex: 0 0 auto;
+  margin-top: 0.25rem;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #91a8eb;
+  box-shadow: 0 0 0 1px #91a8eb;
+}
+
+/* Text area */
+.spotInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.spotName {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.spotDesc {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  color: #000;
+  line-height: 1.35;
+}
+
+/* Tag chips */
+.spotTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.4rem;
+}
+
+.tag {
+  padding: 0.1rem 0.4rem;
+  border: 1px solid #8eb3eb;
+  background: #eef3fb;
+  color: #000;
+  font-size: 0.65rem;
+  font-weight: 600;
+}

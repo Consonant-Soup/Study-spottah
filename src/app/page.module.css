@@ -1,58 +1,115 @@
-/**
- * page.module.css
- * Home page styles — hero section + map area.
- * Colors: #7d9946 (green hero bg), #91a8eb (purple map bg), black text.
- * Sharp corners throughout.
- */
-
 .page {
   flex: 1;
   background: #f7faf9;
+  color: #173a35;
   font-family: var(--font-geist-sans);
 }
 
-/* ---- Hero / mission section ---- */
-.hero {
-  width: 100%;
-  padding: 5rem 2rem;
-  background: #7d9946;
-  text-align: center;
+.eyebrow {
+  margin-bottom: 0.75rem;
+  color: #527a70;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
 }
 
-.title {
-  margin: 0;
-  color: #000;
-  font-size: clamp(3.5rem, 9vw, 7rem);
-  font-weight: 800;
+.heading {
+  max-width: 39rem;
+  font-size: clamp(2.5rem, 5vw, 4.25rem);
+  font-weight: 650;
+  letter-spacing: -0.055em;
+  line-height: 1.04;
+}
+
+.intro {
+  max-width: 34rem;
+  margin: 1.25rem 0 1.75rem;
+  color: #60736e;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.15rem;
+  border: 1px solid #245e50;
+  border-radius: 0.65rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.primaryButton {
+  background: #245e50;
+  color: #fff;
+}
+
+.primaryButton:hover {
+  background: #184a3f;
+  color: #fff;
+}
+
+.secondaryButton {
+  background: transparent;
+  color: #245e50;
+}
+
+.secondaryButton:hover {
+  background: #e7f0ec;
+  color: #184a3f;
+}
+
+.featureSection {
+  margin-top: 6rem;
+}
+
+.sectionHeading {
+  font-size: clamp(1.7rem, 3vw, 2.4rem);
+  font-weight: 650;
   letter-spacing: -0.04em;
-  line-height: 1.05;
 }
 
-.mission {
-  max-width: 36rem;
-  margin: 1.25rem auto 0;
-  color: #000;
-  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
-  font-weight: 500;
+.featureCard {
+  height: 100%;
+  padding: 1.5rem;
+  border: 1px solid #dce7e2;
+  border-radius: 0.85rem;
+  background: #fff;
+}
+
+.featureNumber {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #679386;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.featureCard h3 {
+  font-size: 1.1rem;
+  font-weight: 650;
+}
+
+.featureCard p {
+  margin: 0;
+  color: #687a75;
   line-height: 1.6;
 }
 
-/* ---- Map area — purple background, holds toolbar + map/list ---- */
-.mapArea {
-  width: 100%;
-  height: 65vh;
-  padding: 0 2rem 2rem;
-  background: #91a8eb;
-}
-
-/* Responsive */
 @media (max-width: 575px) {
-  .hero {
-    padding: 3.5rem 1rem;
-  }
-
-  .mapArea {
-    height: 55vh;
-    padding: 0 1rem 1rem;
+  .featureSection {
+    margin-top: 4rem;
   }
 }

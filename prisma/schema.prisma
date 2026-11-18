@@ -38,3 +38,63 @@ model Stuff {
   condition Condition @default(good)
   owner     String
 }
+
+enum Standing {
+  freshmen
+  sophmore
+  junior
+  senior
+  graduate
+  phd
+}
+
+model Profile {
+  id          Int      @id @default(autoincrement())
+  profilepic    String?
+  uhemail       String @unique
+  uhstudentid   Int @unique
+  firstName     String
+  lastName      String
+  major         String
+  standing      Standing @default(freshmen)
+}
+
+enum YesNoUnknown {
+  yes
+  no
+  unknown
+}
+
+enum NoiseLevel {
+  LEVEL_1 @map("1")
+  LEVEL_2 @map("2")
+  LEVEL_3 @map("3")
+  LEVEL_4 @map("4")
+  LEVEL_5 @map("5")
+  LEVEL_6 @map("6")
+  LEVEL_7 @map("7")
+}
+
+enum Major {
+  Engineering
+  Bio
+  Math
+}
+
+model Spot {
+  id          Int          @id @default(autoincrement())
+  location    String
+  outdoors    YesNoUnknown @default(unknown)
+  ac          YesNoUnknown @default(unknown)
+  microwave   YesNoUnknown @default(unknown)
+  outlets     YesNoUnknown @default(unknown)
+  windows     YesNoUnknown @default(unknown)
+  groupstudy  YesNoUnknown @default(unknown)
+  tutors      YesNoUnknown @default(unknown)
+  printer     YesNoUnknown @default(unknown)
+  noiselvl    NoiseLevel
+  foodAllowed YesNoUnknown @default(unknown)
+  majors      Major[]
+  seating     YesNoUnknown @default(unknown)
+  computers   YesNoUnknown @default(unknown)
+}

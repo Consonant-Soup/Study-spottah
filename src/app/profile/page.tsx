@@ -1,11 +1,11 @@
-import FeatureStubPage from '@/components/FeatureStubPage';
+import SpotsProfile from '@/components/SpotsProfile';
 
-const ProfilePage = () => (
-  <FeatureStubPage
-    title="Profile"
-    description="View and manage your Study Spottah profile."
-    requiresAuth
-  />
-);
+const ProfilePage = () => {
+  return (
+    <main>
+      <SpotsProfile />
+    </main>
+  );
+};
 
 export default ProfilePage;

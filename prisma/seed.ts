@@ -1,8 +1,18 @@
-import { PrismaClient, Role, Condition } from '@prisma/client';
+import { PrismaClient, Role, Condition, Standing } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
+import { PrismaPg } from '@prisma/adapter-pg'
+import pg from 'pg'
+import 'dotenv/config'
 
-const prisma = new PrismaClient();
+// Initialize the database pool
+const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
+
+// Instantiate the driver adapter
+const adapter = new PrismaPg(pool)
+
+// Pass the adapter directly to Prisma Client
+export const prisma = new PrismaClient({ adapter })
 
 async function main() {
   console.log('Seeding the database');
@@ -34,6 +44,30 @@ async function main() {
         quantity: data.quantity,
         owner: data.owner,
         condition,
+      },
+    });
+  }
+  for (const profile of config.defaultProfile) {
+    const standing = (profile.standing as Standing) || Standing.freshmen;
+    console.log(`  Creating profile: ${profile.uhemail}`);
+    await prisma.profile.upsert({
+      where: { uhemail: profile.uhemail },
+      update: {
+        profilepic: profile.profilepic,
+        uhstudentid: profile.uhstudentid,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        major: profile.major,
+        standing,
+      },
+      create: {
+        profilepic: profile.profilepic,
+        uhemail: profile.uhemail,
+        uhstudentid: profile.uhstudentid,
+        firstName: profile.firstName,
+        lastName: profile.lastName,
+        major: profile.major,
+        standing,
       },
     });
   }

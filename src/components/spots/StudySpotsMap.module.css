@@ -1,0 +1,67 @@
+/**
+ * StudySpotsMap.module.css
+ * Styles for the Leaflet map container, custom markers, and popups.
+ * Uses the design guide colors: #91a8eb (main), #8eb3eb (accent), #7d9946 (secondary).
+ * Sharp corners throughout — no border-radius.
+ */
+
+/* Leaflet requires a definite height to render its map canvas. */
+.mapContainer {
+  width: 100%;
+  height: 24rem;
+}
+
+/* Leaflet map fills its container */
+.map {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom dot marker — pastel purple with white border */
+.markerIcon {
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #91a8eb;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 25%);
+}
+
+/* Popup card styling — sharp corners, black text */
+.popup {
+  min-width: 10rem;
+  padding: 0.25rem;
+  color: #000;
+  font-family: inherit;
+}
+
+.popupTitle {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.popupDesc {
+  margin: 0 0 0.5rem;
+  font-size: 0.8rem;
+  color: #000;
+  line-height: 1.4;
+}
+
+/* Tag chips inside the popup */
+.popupTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.tag {
+  padding: 0.15rem 0.5rem;
+  border: 1px solid #8eb3eb;
+  background: #eef3fb;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+

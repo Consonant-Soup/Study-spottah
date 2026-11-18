@@ -3,6 +3,7 @@
 import { useSession } from 'next-auth/react';
 import { usePathname } from 'next/navigation';
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
+import styles from './Navbar.module.css';
 import {
   BoxArrowRight,
   BusFrontFill,
@@ -16,17 +17,18 @@ import {
 const NavBar: React.FC = () => {
   const { data: session, status } = useSession();
   const pathName = usePathname();
-  if (status === 'loading') return null;
+  // Keep public links visible while Auth.js checks the session.
+  const authenticated = status === 'authenticated' && Boolean(session?.user?.email);
 
-  const currentUser = session?.user?.email;
+  const currentUser = authenticated ? session?.user?.email : null;
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar expand="lg" className={styles.studyNavbar} aria-label="Study Spottah main navigation">
       <Container>
-        <Navbar.Brand href="/" aria-label="Home">
+        <Navbar.Brand href="/" aria-label="Study Spottah home">
           <HouseFill className="me-2" aria-hidden="true" />
           Study Spottah
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="study-spottah-navbar" />
+        <Navbar.Toggle aria-controls="study-spottah-navbar" className={styles.toggle} />
         <Navbar.Collapse id="study-spottah-navbar">
           <Nav className="me-auto">
             {currentUser && (
@@ -48,7 +50,7 @@ const NavBar: React.FC = () => {
               </Nav.Link>
             )}
           </Nav>
-          <Nav>
+          <Nav className={styles.accountMenu}>
             {currentUser ? (
               <>
                 <Nav.Link href="/profile" active={pathName === '/profile'}>
@@ -66,11 +68,11 @@ const NavBar: React.FC = () => {
                   </NavDropdown.Item>
                 </NavDropdown>
               </>
-            ) : (
+            ) : status === 'unauthenticated' ? (
               <Nav.Link id="login-nav" href="/auth/signin" active={pathName === '/auth/signin'}>
                 Login
               </Nav.Link>
-            )}
+            ) : null}
           </Nav>
         </Navbar.Collapse>
       </Container>

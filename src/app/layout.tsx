@@ -33,10 +33,8 @@ export default function RootLayout({
       <body className={classString}>
        <Providers>
           <NavBar />
-          <div className="flex-grow-1">
-            {children}
-          </div>
-          <Footer />
+          {children}
+          {/* <Footer /> */}
         </Providers>
       </body>
     </html>

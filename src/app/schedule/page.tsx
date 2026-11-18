@@ -1,11 +1,16 @@
-import FeatureStubPage from '@/components/FeatureStubPage';
+import { auth } from '@/lib/auth';
+import { loggedInProtectedPage } from '@/lib/page-protection';
+import SchedulePageContent from './SchedulePageContent';
 
-const SchedulePage = () => (
-  <FeatureStubPage
-    title="Schedule a study session"
-    description="Plan a study session and find a time and place that works for your group."
-    requiresAuth
-  />
-);
+const SchedulePage = async () => {
+  const session = await auth();
+  loggedInProtectedPage(
+    session as {
+      user: { email: string; id: string; name: string };
+    } | null,
+  );
+
+  return <SchedulePageContent />;
+};
 
 export default SchedulePage;

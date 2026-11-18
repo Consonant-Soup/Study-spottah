@@ -1,11 +1,18 @@
 import { Col, Container, Row } from 'react-bootstrap';
 import SpotsPanel from '@/components/SpotsPanel';
+/**
+ * page.tsx
+ * Home page — hero with mission statement, then filter bar + campus map.
+ * More sections will be added below the map.
+ */
+
+import SpotsSection from '@/components/spots/SpotsSection';
 import styles from './page.module.css';
 
 const Home = () => (
   <main className={styles.page}>
     <Container className="py-5">
-      <Row className="align-items-center gy-5">
+      {/* <Row className="align-items-center gy-5">
         <Col lg={6}>
           <p className={styles.eyebrow}>Find your next study spot</p>
           <h1 className={styles.heading}>A better place to focus is closer than you think.</h1>
@@ -20,7 +27,7 @@ const Home = () => (
         <Col lg={6}>
           <SpotsPanel />
         </Col>
-      </Row>
+      </Row> */}
 
       <section className={styles.featureSection}>
         <p className={styles.eyebrow}>Make room for good work</p>
@@ -50,6 +57,16 @@ const Home = () => (
         </Row>
       </section>
     </Container>
+    {/* Hero / mission section — full width, green background */}
+    <section className={styles.hero}>
+      <h1 className={styles.title}>Study Spottah</h1>
+      <p className={styles.mission}>Find your next study spot at UH Mānoa.</p>
+    </section>
+
+    {/* Map area — purple background, toolbar + map/list inside */}
+    <section className={styles.mapArea}>
+      <SpotsSection />
+    </section>
   </main>
 );
 

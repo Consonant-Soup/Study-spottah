@@ -62,3 +62,7 @@ package-lock.json
 /playwright/.cache/
 /playwright/.auth/
 tests/playwright-auth-sessions/
+
+# Commit non-secret examples, but never commit actual authentication or API keys.
+!.env.example
+!.env.local.example

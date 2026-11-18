@@ -34,9 +34,13 @@ const StudySpotsMapInner = dynamic(() => import('./StudySpotsMap'), {
 /** Props passed through to the inner map component */
 type StudySpotsMapWrapperProps = {
   spots?: StudySpot[];
+  onSpotSelect?: (spot: StudySpot) => void;
 };
 
 /** Wrapper that forwards props to the dynamically imported map */
-export default function StudySpotsMapWrapper({ spots }: StudySpotsMapWrapperProps) {
-  return <StudySpotsMapInner spots={spots} />;
+export default function StudySpotsMapWrapper({
+  spots,
+  onSpotSelect,
+}: StudySpotsMapWrapperProps) {
+  return <StudySpotsMapInner spots={spots} onSpotSelect={onSpotSelect} />;
 }

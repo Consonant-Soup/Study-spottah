@@ -14,11 +14,20 @@ import styles from './StudySpotsList.module.css';
 type StudySpotsListProps = {
   /** Spots to display — defaults to all spots when omitted */
   spots?: StudySpot[];
+  selectedSpotId?: number;
   onSpotSelect?: (spot: StudySpot) => void;
 };
 
 /** Single list row for one study spot */
-function SpotRow({ spot, onSelect }: { spot: StudySpot; onSelect?: (spot: StudySpot) => void }) {
+function SpotRow({
+  spot,
+  selected,
+  onSelect,
+}: {
+  spot: StudySpot;
+  selected: boolean;
+  onSelect?: (spot: StudySpot) => void;
+}) {
   const content = (
     <>
       <span className={styles.spotDot} aria-hidden="true" />
@@ -41,6 +50,7 @@ function SpotRow({ spot, onSelect }: { spot: StudySpot; onSelect?: (spot: StudyS
         <button
           type="button"
           className={styles.rowButton}
+          aria-pressed={selected}
           onClick={() => onSelect(spot)}
         >
           {content}
@@ -53,7 +63,11 @@ function SpotRow({ spot, onSelect }: { spot: StudySpot; onSelect?: (spot: StudyS
 }
 
 /** Main list component */
-export default function StudySpotsList({ spots = studySpots, onSpotSelect }: StudySpotsListProps) {
+export default function StudySpotsList({
+  spots = studySpots,
+  selectedSpotId,
+  onSpotSelect,
+}: StudySpotsListProps) {
   return (
     <div className={styles.listContainer}>
       <div className={styles.listHeader}>
@@ -62,7 +76,12 @@ export default function StudySpotsList({ spots = studySpots, onSpotSelect }: Stu
       </div>
       <ul className={styles.list}>
         {spots.map((spot) => (
-          <SpotRow key={spot.id} spot={spot} onSelect={onSpotSelect} />
+          <SpotRow
+            key={spot.id}
+            spot={spot}
+            selected={selectedSpotId === spot.id}
+            onSelect={onSpotSelect}
+          />
         ))}
       </ul>
     </div>

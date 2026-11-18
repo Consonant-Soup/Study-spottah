@@ -15,3 +15,55 @@
   flex: 1;
   min-height: 0;
 }
+
+.selectionActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #8eb3eb;
+  background: #fff;
+  color: #000;
+}
+
+.selectionActions p {
+  margin: 0;
+}
+
+.actionButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.detailsLink,
+.sessionButton {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #8eb3eb;
+  border-radius: 0;
+  background: #91a8eb;
+  color: #000;
+  font: inherit;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.detailsLink:hover,
+.sessionButton:hover {
+  background: #8eb3eb;
+  color: #000;
+}
+
+.detailsLink:focus-visible,
+.sessionButton:focus-visible {
+  outline: 2px solid #526638;
+  outline-offset: 2px;
+}

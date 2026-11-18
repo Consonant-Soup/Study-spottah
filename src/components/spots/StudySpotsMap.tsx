@@ -19,6 +19,7 @@ import styles from './StudySpotsMap.module.css';
 type StudySpotsMapProps = {
   /** Spots to display — defaults to all spots when omitted */
   spots?: StudySpot[];
+  onSpotSelect?: (spot: StudySpot) => void;
 };
 
 /** UH Manoa campus center coordinates */
@@ -51,7 +52,10 @@ function SpotPopup({ spot }: { spot: StudySpot }) {
 }
 
 /** Main map component — renders Leaflet map with study spot markers */
-export default function StudySpotsMap({ spots = studySpots }: StudySpotsMapProps) {
+export default function StudySpotsMap({
+  spots = studySpots,
+  onSpotSelect,
+}: StudySpotsMapProps) {
   const spotIcon = createSpotIcon();
 
   return (
@@ -75,6 +79,9 @@ export default function StudySpotsMap({ spots = studySpots }: StudySpotsMapProps
             key={spot.id}
             position={[spot.lat, spot.lng]}
             icon={spotIcon}
+            eventHandlers={{
+              click: () => onSpotSelect?.(spot),
+            }}
           >
             <Popup>
               <SpotPopup spot={spot} />

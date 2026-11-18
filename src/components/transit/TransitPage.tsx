@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowDownLeft, ArrowRight, ArrowUpRight, BusFront, ChevronDown, Clock3, Compass, ExternalLink, GraduationCap, Info, LocateFixed, MapPin, RefreshCw, Route, Search, X } from 'lucide-react';
+import { ArrowDownLeft, ArrowRight, ArrowUpRight, BusFront, ChevronDown, Clock3, Compass, GraduationCap, Info, LocateFixed, MapPin, RefreshCw, Route, Search, X } from 'lucide-react';
 import TransitMap from './TransitMap';
 import { ALL_STOPS, ROUTE_DETAILS, SHUTTLE_STOPS, SOURCES, THEBUS_STOPS } from '@/lib/transit/data';
 import { getDemoBusArrivals, getHonoluluClock, getNextRainbowDepartures } from '@/lib/transit/schedule';
@@ -164,6 +164,10 @@ function StopDirectory({ selectedStopId, onSelectStop, filter, setFilter }: {
   </section>;
 }
 
+/**
+ * Client-only route explorer. Shared navbar, login state and footer live in the
+ * issue-1 root layout so this feature does not duplicate application chrome.
+ */
 export default function TransitPage() {
   const [now, setNow] = useState<Date>(new Date());
   const [selectedStopId, setSelectedStopId] = useState('sh-hawaiian');
@@ -183,11 +187,7 @@ export default function TransitPage() {
 
   return <div className={styles.page}>
     <div className={styles.topline}><span>BUILT FOR THE BOWS <span aria-hidden="true">✳</span></span><span>UH MĀNOA • HONOLULU, HI</span></div>
-    <header className={styles.navbar}>
-      <a href="/" className={styles.brand} aria-label="Study Spottah home"><span className={styles.brandMark}><span>✳</span></span><span>STUDY<br/>SPOTTAH<span className={styles.brandPeriod}>.</span></span></a>
-      <nav className={styles.navLinks} aria-label="Main navigation"><span className={styles.navMuted}>Explore</span><span className={styles.navMuted}>Study spots</span><a href="/transit" aria-current="page" className={styles.navCurrent}><BusFront size={17}/> Transit <span className={styles.navActiveLine}/></a></nav>
-      <span className={styles.navTag}><GraduationCap size={17}/> Mānoa student mode</span>
-    </header>
+    {/* Shared issue-1 Navbar from src/components/Navbar.tsx is rendered by the root layout. */}
     <main className={styles.main}>
       <section className={styles.hero}>
         <div className={styles.heroText}><span className={styles.heroEyebrow}><span className={styles.heroPulse}/> CAMPUS COMMUTE, SORTED</span><h1>Get there.<br/><span>Get studying.</span></h1><p>The easiest way to find your next ride around UH Mānoa. Explore campus stops, compare options, and spend less time guessing at the curb.</p><div className={styles.heroCtas}><a href="#map" className={styles.primaryCta}>Explore the map <ArrowRight size={18}/></a><a href="#stops" className={styles.secondaryCta}>Find a stop <MapPin size={17}/></a></div></div>
@@ -211,6 +211,6 @@ export default function TransitPage() {
         <article><span className={styles.tipNumber}>03</span><Compass size={27}/><h3>Connect to Skyline.</h3><p>A Line and U Line connect Mānoa with Āhua Lagoon Drive Station, opening up more ways to commute.</p><a href={SOURCES.skyline} target="_blank" rel="noreferrer">Plan a connection <ArrowUpRight size={15}/></a></article>
       </section>
     </main>
-    <footer className={styles.footer}><div><strong>STUDY SPOTTAH<span>✳</span></strong><small>Made for the in-between moments at UH Mānoa.</small></div><div className={styles.footerLinks}><a href={SOURCES.rainbowSchedule} target="_blank" rel="noreferrer">Rainbow Shuttle schedule <ExternalLink size={13}/></a><a href={SOURCES.theBusHea} target="_blank" rel="noreferrer">TheBus HEA <ExternalLink size={13}/></a></div><small>Student project · Not affiliated with TheBus or UH Mānoa</small></footer>
+    {/* Shared issue-1 Footer is rendered once by the root layout. */}
   </div>;
 }

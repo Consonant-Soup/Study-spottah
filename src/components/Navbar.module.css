@@ -1,0 +1,48 @@
+/* Issue-1 shared navigation. These tokens match the transit page without touching Bootstrap's base components. */
+.studyNavbar {
+  --ss-purple: #91a8eb;
+  --ss-blue: #8eb3eb;
+  --ss-green: #7d9946;
+  --bs-navbar-color: #000;
+  --bs-navbar-hover-color: #000;
+  --bs-navbar-active-color: #000;
+  --bs-navbar-brand-color: #000;
+  --bs-navbar-brand-hover-color: #000;
+  background: var(--ss-purple);
+  color: #000;
+  border-bottom: 2px solid #000;
+  border-radius: 0;
+  font-size: 0.91rem;
+  position: relative;
+  z-index: 20;
+}
+.studyNavbar :global(.navbar-brand) {
+  color: #000;
+  font-weight: 850;
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+.studyNavbar :global(.navbar-nav) { align-items: center; gap: 5px; }
+.studyNavbar :global(.nav-link) {
+  color: #000;
+  border: 1px solid transparent;
+  border-radius: 0;
+  padding: 0.65rem 0.68rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.studyNavbar :global(.nav-link:hover),
+.studyNavbar :global(.nav-link:focus-visible) { background: var(--ss-blue); border-color: #000; color: #000; }
+.studyNavbar :global(.nav-link.active) { background: var(--ss-green); border-color: #000; color: #000; }
+.studyNavbar :global(.dropdown-menu) { border: 1.5px solid #000; border-radius: 0; background: white; }
+.studyNavbar :global(.dropdown-item) { color: #000; font-weight: 600; }
+.studyNavbar :global(.dropdown-item:focus), .studyNavbar :global(.dropdown-item:hover) { background: var(--ss-blue); color: #000; }
+.accountMenu { margin-left: auto; }
+.toggle { border: 1px solid #000; border-radius: 0; }
+@media (max-width: 991px) {
+  .studyNavbar :global(.navbar-nav) { align-items: stretch; gap: 0; }
+  .studyNavbar :global(.nav-link) { width: 100%; padding: .8rem .6rem; }
+  .accountMenu { margin-left: 0; border-top: 1px solid #000; padding-top: 5px; }
+}

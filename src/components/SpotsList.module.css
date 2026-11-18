@@ -1,0 +1,85 @@
+.listCard {
+  min-height: 20rem;
+  overflow: hidden;
+  border: 1px solid #d6e3de;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 1.25rem 3rem rgb(26 63 54 / 8%);
+}
+
+.listHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #edf2ef;
+  color: #71817c;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.listStatus {
+  color: #578477;
+}
+
+.list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.listItem {
+  display: flex;
+  min-height: 5rem;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #edf2ef;
+  color: #173a35;
+}
+
+.listItem:last-child {
+  border-bottom: 0;
+}
+
+.listItem strong,
+.listItem small {
+  display: block;
+}
+
+.listItem strong {
+  font-size: 0.95rem;
+}
+
+.listItem small {
+  margin-top: 0.25rem;
+  color: #687a75;
+}
+
+.spotButton {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 1rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.spotButton:focus-visible {
+  outline: 2px solid #327564;
+  outline-offset: 0.25rem;
+}
+
+.spotIcon {
+  width: 1rem;
+  height: 1rem;
+  flex: 0 0 auto;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #327564;
+  box-shadow: 0 0 0 1px #327564, 0 2px 8px rgb(23 58 53 / 25%);
+}

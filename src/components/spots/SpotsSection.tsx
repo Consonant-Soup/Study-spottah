@@ -6,7 +6,7 @@
 
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo } from 'react';
 import SpotsToolbar from './SpotsToolbar';
 import StudySpotsMapWrapper from './StudySpotsMapWrapper';
 import StudySpotsList from './StudySpotsList';
@@ -14,7 +14,11 @@ import studySpots from './spotData';
 import type { SpotsView } from './SpotsToolbar';
 import styles from './SpotsSection.module.css';
 
-export default function SpotsSection() {
+type SpotsSectionProps = {
+  onSpotSelect?: (spotName: string) => void;
+};
+
+export default function SpotsSection({ onSpotSelect }: SpotsSectionProps) {
   const [view, setView] = useState<SpotsView>('map');
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
@@ -40,7 +44,12 @@ export default function SpotsSection() {
       <div className={styles.content}>
         {view === 'map'
           ? <StudySpotsMapWrapper spots={filteredSpots} />
-          : <StudySpotsList spots={filteredSpots} />}
+          : (
+            <StudySpotsList
+              spots={filteredSpots}
+              onSpotSelect={onSpotSelect ? (spot) => onSpotSelect(spot.name) : undefined}
+            />
+          )}
       </div>
     </div>
   );

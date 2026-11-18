@@ -84,7 +84,7 @@ function NextArrivals({ now, selectedStopId, onRefresh }: { now: Date; selectedS
 
   return <section className={styles.board} aria-label="Next transit options">
     <div className={styles.boardTop}>
-      <div><span className={styles.eyebrow}>UP NEXT</span><h2>Next arrivals<span className={styles.titleStar}>✳</span></h2></div>
+      <div><span className={styles.eyebrow}>UP NEXT</span><h2>Next arrivals</h2></div>
       <button title="Refresh arrivals" className={styles.refreshBtn} onClick={() => { onRefresh(); setRefreshKey((n) => n + 1); }}><RefreshCw size={18} /></button>
     </div>
     <div className={styles.boardMode}><ModePill live={liveMode === 'live'} /> <span>{liveMode === 'demo' ? 'TheBus times below are fictional samples' : liveMode === 'unavailable' ? 'Live feed is unavailable' : 'Powered by TheBus HEA'}</span></div>
@@ -189,6 +189,7 @@ export default function TransitPage() {
     <div className={styles.topline}><span>BUILT FOR THE BOWS <span aria-hidden="true">✳</span></span><span>UH MĀNOA • HONOLULU, HI</span></div>
     {/* Shared issue-1 Navbar from src/components/Navbar.tsx is rendered by the root layout. */}
     <main className={styles.main}>
+      {/*
       <section className={styles.hero}>
         <div className={styles.heroText}><span className={styles.heroEyebrow}><span className={styles.heroPulse}/> CAMPUS COMMUTE, SORTED</span><h1>Get there.<br/><span>Get studying.</span></h1><p>The easiest way to find your next ride around UH Mānoa. Explore campus stops, compare options, and spend less time guessing at the curb.</p><div className={styles.heroCtas}><a href="#map" className={styles.primaryCta}>Explore the map <ArrowRight size={18}/></a><a href="#stops" className={styles.secondaryCta}>Find a stop <MapPin size={17}/></a></div></div>
         <div className={styles.heroRight}><div className={styles.heroSticker}><span className={styles.stickerSun}>✳</span><strong>LESS<br/>WAITING.<br/>MORE<br/>LIVING.</strong><span className={styles.stickerCorner}>↗</span></div><div className={styles.heroScribble}>your next ride<br/>is calling! ↗</div></div>
@@ -198,6 +199,7 @@ export default function TransitPage() {
         <div><span className={styles.stripIcon}><MapPin size={20}/></span><strong>{ALL_STOPS.length} featured stops</strong><span>Campus + close-by connections</span></div>
         <div><span className={styles.stripIcon}><Clock3 size={20}/></span><strong>{clock.label} HST</strong><span>Honolulu local time</span></div>
       </div>
+      */}
       {!dismissed && <div className={styles.previewNotice}><Info size={18}/><div><strong>Quick heads-up:</strong> TheBus arrivals are sample data in this mockup. The Rainbow Shuttle times are calculated from UH’s published timetable, not GPS tracking. The map is schematic.</div><button onClick={() => setDismissed(true)} aria-label="Dismiss preview notice"><X size={18}/></button></div>}
       <section className={styles.mainPanels} id="map" aria-label="Campus transit map and arrivals">
         <div className={styles.mapColumn}><div className={styles.panelHead}><div><span className={styles.eyebrow}>THE CAMPUS CONNECTION</span><h2>Where to catch your ride<span className={styles.titleStar}>.</span></h2></div><span className={styles.panelHeadBadge}><LocateFixed size={14} /> CAMPUS VIEW</span></div><TransitMap stops={ALL_STOPS} selectedStopId={selectedStopId} onSelectStop={selectStop} visibleService={filter}/><p className={styles.mapCaveat}><Info size={13}/> Pin positions and route lines are approximate; check <a href={SOURCES.officialBusMap} target="_blank" rel="noreferrer">TheBus campus stop map</a> and the shuttle map before traveling.</p></div>

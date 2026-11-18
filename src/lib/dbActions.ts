@@ -1,6 +1,6 @@
 'use server';
 
-import { Condition } from '@prisma/client';
+import { Condition, YesNoUnknown, NoiseLevel, Major } from '@prisma/client';
 import { Stuff } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
@@ -29,6 +29,67 @@ export async function addStuff(stuff: { name: string; quantity: number; owner: s
     },
   });
   // After adding, redirect to the list page
+  redirect('/list');
+}
+
+// For adding new spots to the website
+const noiseLevelMap: Record<number, NoiseLevel> = {
+  1: NoiseLevel.LEVEL_1,
+  2: NoiseLevel.LEVEL_2,
+  3: NoiseLevel.LEVEL_3,
+  4: NoiseLevel.LEVEL_4,
+  5: NoiseLevel.LEVEL_5,
+  6: NoiseLevel.LEVEL_6,
+  7: NoiseLevel.LEVEL_7,
+};
+
+function toYesNoUnknown(value: string): YesNoUnknown {
+  if (value === 'yes') return YesNoUnknown.yes;
+  if (value === 'no') return YesNoUnknown.no;
+  return YesNoUnknown.unknown;
+}
+
+/**
+ * Adds a new location to the database.
+ * @param spot, an object with the following properties:
+ *  location
+ *  outdoors
+ *  ac
+ *  microwave
+ *  windows
+ *  outlests
+ *  groupstudy
+ *  tutors
+ *  printer
+ *  noise level
+ *  is food allowd
+ *  majors
+ *  setaing
+ *  computers
+ */
+export async function addSpots(spot: { location: string; outdoors: string, ac: string, microwave: string, outlets: string, windows: string, groupstudy: string, tutors: string, printer: string, noiselvl: number, foodAllowed: string, majors: string[], seating: string, computers:string}) {
+  // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
+  const mappedNoise = noiseLevelMap[spot.noiselvl] ?? NoiseLevel.LEVEL_1;
+
+  await prisma.spot.create({
+    data: {
+      location: spot.location,
+      outdoors: toYesNoUnknown(spot.outdoors),
+      ac: toYesNoUnknown(spot.ac),
+      microwave: toYesNoUnknown(spot.microwave),
+      outlets: toYesNoUnknown(spot.outlets),
+      windows: toYesNoUnknown(spot.windows),
+      groupstudy: toYesNoUnknown(spot.groupstudy),
+      tutors: toYesNoUnknown(spot.tutors),
+      printer: toYesNoUnknown(spot.printer),
+      noiselvl: mappedNoise,
+      foodAllowed: toYesNoUnknown(spot.foodAllowed),
+      majors: spot.majors as Major[],
+      seating: toYesNoUnknown(spot.seating),
+      computers: toYesNoUnknown(spot.computers),
+    },
+  });
+  // After adding, redirect to the list of study spots as a card 
   redirect('/list');
 }
 

@@ -1,11 +1,20 @@
-import FeatureStubPage from '@/components/FeatureStubPage';
+import { loggedInProtectedPage } from '@/lib/page-protection';
+import { auth } from '@/lib/auth';
+import AddSpotForm from '@/components/AddSpotForm';
 
-const NewSpotPage = () => (
-  <FeatureStubPage
-    title="Create or report a spot"
-    description="Share a new place to study or report an update to a spot in the community."
-    requiresAuth
-  />
-);
+const AddSpot = async () => {
+  // Protect the page, only logged in users can access it.
+  const session = await auth();
+  loggedInProtectedPage(
+    session as {
+      user: { email: string; id: string; name: string };
+    } | null,
+  );
+  return (
+    <main>
+      <AddSpotForm />
+    </main>
+  );
+};
 
-export default NewSpotPage;
+export default AddSpot;

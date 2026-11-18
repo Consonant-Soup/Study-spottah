@@ -12,3 +12,116 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+:root {
+  --color-main: #91a8eb;
+  --color-accent: #8eb3eb;
+  --color-secondary: #7d9946;
+  --color-text: #000000;
+ /* Overrides Bootstrap's white canvas */
+}
+
+/* Force sharp corners on all Bootstrap containers, cards, buttons, inputs, and badges */
+.btn,
+.list-group,
+.list-group-item,
+.alert {
+  border-radius: 0 !important;
+  color: var(--color-text) !important;
+}
+
+.form-control,
+.form-select,
+.form-check-input {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #7d9946 !important;
+  border-radius: 0 !important;
+}
+
+.badge {
+  background-color: #7d9946;
+}
+.card,
+.card-header {
+  background-color: #ffffff;
+}
+
+.card-footer {
+  background-color: #ffffff;
+}
+
+.profileCard {
+  border-color: #8eb3eb;
+}
+/* Keep focus ring sharp and match your accent/secondary theme */
+.form-control:focus,
+.form-select:focus,
+.form-check-input:focus {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-color: #7d9946 !important;
+  box-shadow: none !important;
+}
+
+/* Style checked checkboxes with your pastel green secondary color */
+.form-check-input:checked {
+  background-color: #7d9946 !important;
+  border-color: #000000 !important;
+}
+
+/* Custom Theme Helper Classes */
+.theme-card {
+  background-color: #ffffff;
+  border-color: #8eb3eb;
+}
+
+.theme-header {
+  background-color: #ffffff !important;
+  border-bottom: #8eb3eb !important;
+  color: #000000 !important;
+}
+
+.btn-theme-primary {
+  background-color: #8eb3eb ;
+  border-color: #8eb3eb !important;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+.btn-theme {
+  background-color: #ffffff ;
+  border-color: #ffffff;
+  color: #000000 !important;
+  font-weight: 600;  
+}
+
+.btn-theme:hover {
+  background-color: #8eb3eb !important;
+  color: #000000 !important;
+}
+
+.btn-theme-primary:hover {
+  background-color: #8eb3eb !important;
+  color: #000000 !important;
+}
+
+.btn-theme-reset {
+  background-color: #ffffff !important;
+  border: #8eb3eb !important;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+.btn-theme-reset:hover {
+  background-color: #8eb3eb !important;
+  border: #8eb3eb !important;
+  color: #000000 !important;
+  font-weight: 600;
+}
+
+.badge-theme-major {
+  background-color: var(--color-secondary) !important;
+  border: 1px solid #000000;
+  color: #000000 !important;
+}

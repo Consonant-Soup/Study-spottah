@@ -1,46 +1,39 @@
-import { Col, Container, Row, Table } from 'react-bootstrap';
-import { prisma } from '@/lib/prisma';
-import StuffItem from '@/components/StuffItem';
-import { loggedInProtectedPage } from '@/lib/page-protection';
+import { Col, Container, Row } from 'react-bootstrap';
+import { Spot } from '@prisma/client';
 import { auth } from '@/lib/auth';
+import { loggedInProtectedPage } from '@/lib/page-protection';
+import { prisma } from '@/lib/prisma';
+import SpotCard from '@/components/SpotCard';
 
-/** Render a list of stuff for the logged in user. */
+/** Render a list of study spots for the logged-in user. */
 const ListPage = async () => {
-  // Protect the page, only logged in users can access it.
+  // Protect the page so only logged-in users can access it
   const session = await auth();
   loggedInProtectedPage(
     session as {
       user: { email: string; id: string; name: string };
     } | null,
   );
-  const owner = (session && session.user && session.user.email) || '';
-  const stuff = await prisma.stuff.findMany({
-    where: {
-      owner,
+
+  // Fetch all spots from the database
+  const spots: Spot[] = await prisma.spot.findMany({
+    orderBy: {
+      id: 'desc', // Shows the newly added spots first
     },
   });
-  // console.log(stuff);
+
   return (
-    <main>
-      <Container id="list" fluid className="py-3">
+    <main style={{ backgroundColor: '#F5F7FC', color: '#000000', minHeight: '100vh' }}>      <Container id="list" fluid className="py-3">
         <Row>
           <Col>
-            <h1>Stuff</h1>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Quantity</th>
-                  <th>Condition</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {stuff.map((item) => (
-                  <StuffItem key={item.id} {...item} />
-                ))}
-              </tbody>
-            </Table>
+            <h1 className="text-center mb-4">Study Spots</h1>
+            <Row xs={1} md={2} lg={3} className="g-4">
+              {spots.map((spot) => (
+                <Col key={spot.id}>
+                  <SpotCard spot={spot} />
+                </Col>
+              ))}
+            </Row>
           </Col>
         </Row>
       </Container>

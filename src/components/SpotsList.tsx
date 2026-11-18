@@ -4,10 +4,15 @@
  * or an empty-state message that tells the user how to recover.
  */
 import SpotCard from "./SpotCard";
-import { Spot } from "../lib/types";
+import type { Spot } from "../lib/types";
 import styles from "./SpotsList.module.css";
 
-export default function SpotsList({ spots }: { spots: Spot[] }) {
+type SpotsListProps = {
+  spots: Spot[];
+  onSpotSelect?: (spotName: string) => void;
+};
+
+export default function SpotsList({ spots, onSpotSelect }: SpotsListProps) {
   return (
     <section className={styles.list} aria-live="polite">
       <h2 className={styles.count}>
@@ -20,7 +25,13 @@ export default function SpotsList({ spots }: { spots: Spot[] }) {
         </p>
       ) : (
         <div className={styles.grid}>
-          {spots.map((spot) => <SpotCard key={spot.id} spot={spot} />)}
+          {spots.map((spot) => (
+            <SpotCard
+              key={spot.id}
+              spot={spot}
+              onSpotSelect={onSpotSelect}
+            />
+          ))}
         </div>
       )}
     </section>

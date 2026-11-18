@@ -1,5 +1,6 @@
 'use client';
 
+import { MOCK_SPOTS } from './mock-spots';
 import { useSpotsView } from './SpotsViewContext';
 import SpotsList from './SpotsList';
 import SpotsMap from './SpotsMap';
@@ -16,7 +17,9 @@ const SpotsPanel = ({ onSpotSelect }: SpotsPanelProps) => {
   return (
     <section className={styles.panel} aria-label="Study spots">
       <SpotsViewToggle className="btn btn-outline-success mb-3" />
-      {view === 'map' ? <SpotsMap /> : <SpotsList onSpotSelect={onSpotSelect} />}
+      {view === 'map'
+        ? <SpotsMap />
+        : <SpotsList spots={MOCK_SPOTS} onSpotSelect={onSpotSelect} />}
     </section>
   );
 };

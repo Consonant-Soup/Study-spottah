@@ -3,7 +3,7 @@
  * Placeholder data so the UI works before Postgres is connected.
  * Replace the import in app/page.tsx with a database query later.
  */
-import { Spot } from "../lib/types";
+import type { Spot } from "../lib/types";
 
 export const MOCK_SPOTS: Spot[] = [
   {

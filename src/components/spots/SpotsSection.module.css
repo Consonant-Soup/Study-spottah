@@ -1,0 +1,15 @@
+/* SpotsSection — bordered card shell matching Transit's mapShell pattern. */
+
+.section {
+  width: 100%;
+  border: 1.5px solid #000;
+  background: #fff;
+  box-shadow: 6px 6px 0 #d8dfe0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+}

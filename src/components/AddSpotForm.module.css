@@ -1,0 +1,74 @@
+/* Add Spot — gentle brutalist polish to match home/transit design language */
+.page {
+  color: #000;
+  min-height: 100vh;
+  background: #f8f9f9;
+}
+
+.heading {
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: #000;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 950;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #000;
+  margin-bottom: 6px;
+}
+
+.card {
+  border: 1.5px solid #000 !important;
+  box-shadow: 4px 4px 0 #000;
+  background: #fff;
+}
+
+.header {
+  background: var(--color-main, #91a8eb) !important;
+  border-bottom: 1.5px solid #000 !important;
+  color: #000 !important;
+  font-weight: 900;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 12px;
+  padding: 14px 18px;
+}
+
+.submitBtn {
+  background: var(--color-secondary, #7d9946) !important;
+  border: 1.5px solid #000 !important;
+  color: #000 !important;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 12px 0;
+  transition: transform 0.16s, box-shadow 0.16s;
+}
+
+.submitBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 #000;
+}
+
+.resetBtn {
+  background: #fff !important;
+  border: 1.5px solid #000 !important;
+  color: #000 !important;
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 12px 0;
+  transition: transform 0.16s, box-shadow 0.16s;
+}
+
+.resetBtn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 3px 3px 0 #000;
+  background: var(--color-accent, #8eb3eb) !important;
+}

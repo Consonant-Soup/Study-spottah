@@ -1,0 +1,79 @@
+.page {
+  min-height: 100vh;
+  padding: 2rem 1rem 4rem;
+  background: #f5f7fc;
+  color: #000;
+}
+
+.content {
+  width: min(100%, 960px);
+  margin: 0 auto;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 1rem;
+  color: #354c1b;
+  font-weight: 700;
+}
+
+.backLink:focus-visible {
+  outline: 2px solid #526638;
+  outline-offset: 3px;
+}
+
+.header {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #8eb3eb;
+  background: #fff;
+}
+
+.header h1 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.header > p:last-child {
+  margin: 0.5rem 0 0;
+}
+
+.eyebrow {
+  margin: 0 0 0.35rem;
+  color: #526638;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mapSection {
+  margin: 1.5rem 0;
+  padding: 1.25rem;
+  border: 1px solid #8eb3eb;
+  background: #fff;
+}
+
+.sectionHeading {
+  margin-bottom: 0.75rem;
+}
+
+.sectionHeading h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 1rem 0.75rem 2rem;
+  }
+
+  .header {
+    padding: 1rem;
+  }
+
+  .mapSection {
+    padding: 0.75rem;
+  }
+}

@@ -10,7 +10,7 @@
     { "name": "Boogie Board", "quantity": 2, "owner": "admin@foo.com", "condition": "excellent" }
   ],
   "defaultProfile" : [
-    { "profilepic": "", "uhemail": "john@foo.com", "uhstudentid": 12345, "firstName": "John", "lastName": "Doe", "major": "Engineering", "standing": "senior"},
-    { "profilepic": "", "uhemail": "admin@foo.com", "uhstudentid": 67890, "firstName": "Admin", "lastName": "admin", "major": "Engineering", "standing": "senior"}
+    { "profilepic": "", "uhemail": "john@foo.com", "username": "johnfoo", "firstName": "John", "lastName": "Doe", "major": "Engineering", "standing": "senior"},
+    { "profilepic": "", "uhemail": "admin@foo.com", "username": "admin", "firstName": "Admin", "lastName": "admin", "major": "Engineering", "standing": "senior"}
   ]
 }

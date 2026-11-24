@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation';
 import { Role } from '@prisma/client';
+import { prisma } from './prisma';
 
 /**
  * Redirects to the login page if the user is not logged in.
@@ -20,3 +21,15 @@ export const adminProtectedPage = (session: { user: { email: string; id: string;
     redirect('/not-authorized');
   }
 };
+
+export async function requireProfile(email: string) {
+  const profile = await prisma.profile.findUnique({
+    where: { uhemail: email },
+  });
+
+  if (!profile) {
+    redirect('/profile');
+  }
+
+  return profile;
+}

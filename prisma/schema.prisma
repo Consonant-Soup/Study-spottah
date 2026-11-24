@@ -40,11 +40,11 @@ model Stuff {
 }
 
 enum Standing {
-  freshmen
+  freshman
   sophmore
   junior
   senior
-  graduate
+  masters
   phd
 }
 
@@ -52,11 +52,11 @@ model Profile {
   id          Int      @id @default(autoincrement())
   profilepic    String?
   uhemail       String @unique
-  uhstudentid   Int @unique
+  username      String?  @unique
   firstName     String
   lastName      String
   major         String
-  standing      Standing @default(freshmen)
+  standing      Standing @default(freshman)
 }
 
 enum YesNoUnknown {

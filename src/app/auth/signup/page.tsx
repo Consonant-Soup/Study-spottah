@@ -36,12 +36,25 @@ const SignUp = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  {/*
   const onSubmit = async (data: SignUpForm) => {
     // console.log(JSON.stringify(data, null, 2));
     await createUser(data);
     // After creating, signIn with redirect to the add page
-    await signIn('credentials', { callbackUrl: '/', ...data });
+    await signIn('credentials', { callbackUrl: '/profile', ...data });
   };
+  */}
+  const onSubmit = async (data: SignUpForm) => {
+  // 1. Create the new User in Prisma
+  await createUser(data);
+
+  // 2. Automatically log them in and send them straight to /profile
+  await signIn('credentials', {
+    callbackUrl: '/profile',
+    email: data.email,
+    password: data.password,
+  });
+};
 
   return (
     <main>

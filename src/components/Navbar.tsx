@@ -9,7 +9,6 @@ import {
   BusFrontFill,
   CalendarWeekFill,
   HouseFill,
-  Lock,
   PersonCircle,
   PlusCircleFill,
 } from 'react-bootstrap-icons';
@@ -62,10 +61,15 @@ const NavBar: React.FC = () => {
                     <BoxArrowRight className="me-2" aria-hidden="true" />
                     Sign out
                   </NavDropdown.Item>
+                  {/*
+                    Removed changed password from the navbar dropdown
+                    change password accessible through profile settings
+
                   <NavDropdown.Item href="/auth/change-password">
                     <Lock className="me-2" aria-hidden="true" />
                     Change password
                   </NavDropdown.Item>
+                  */}
                 </NavDropdown>
               </>
             ) : status === 'unauthenticated' ? (

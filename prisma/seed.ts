@@ -48,13 +48,14 @@ async function main() {
     });
   }
   for (const profile of config.defaultProfile) {
-    const standing = (profile.standing as Standing) || Standing.freshmen;
+    const standing = (profile.standing as Standing) || Standing.freshman;
     console.log(`  Creating profile: ${profile.uhemail}`);
     await prisma.profile.upsert({
       where: { uhemail: profile.uhemail },
       update: {
         profilepic: profile.profilepic,
-        uhstudentid: profile.uhstudentid,
+        uhemail: profile.uhemail,
+        username: profile.username,
         firstName: profile.firstName,
         lastName: profile.lastName,
         major: profile.major,
@@ -63,7 +64,7 @@ async function main() {
       create: {
         profilepic: profile.profilepic,
         uhemail: profile.uhemail,
-        uhstudentid: profile.uhstudentid,
+        username: profile.username,
         firstName: profile.firstName,
         lastName: profile.lastName,
         major: profile.major,

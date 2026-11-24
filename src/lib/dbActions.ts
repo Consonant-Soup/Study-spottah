@@ -1,10 +1,11 @@
 'use server';
 
-import { Condition, YesNoUnknown, NoiseLevel, Major } from '@prisma/client';
+import { Condition, YesNoUnknown, NoiseLevel, Major, Standing } from '@prisma/client';
 import { Stuff } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
 import { prisma } from './prisma';
+import { revalidatePath } from 'next/cache';
 
 /**
  * Adds a new stuff to the database.
@@ -49,6 +50,16 @@ function toYesNoUnknown(value: string): YesNoUnknown {
   return YesNoUnknown.unknown;
 }
 
+function standing(value: string): Standing {
+  if (value == 'freshman') return Standing.freshman;
+  if (value == 'sophmore') return Standing.sophmore;
+  if (value == 'junior') return Standing.junior;
+  if (value == 'senior') return Standing.senior;
+  if (value == 'masters') return Standing.masters;
+  if (value == 'phd') return Standing.phd;
+  return Standing.freshman;
+};
+
 /**
  * Adds a new location to the database.
  * @param spot, an object with the following properties:
@@ -92,6 +103,30 @@ export async function addSpots(spot: { location: string; outdoors: string, ac: s
   // After adding, redirect to the list of study spots as a card 
   redirect('/list');
 }
+
+export async function addProfiles(profile: {
+  profilepic?: string;
+  uhemail: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  major: string;
+  standing: string;
+}) {
+  await prisma.profile.create({
+    data: {
+      profilepic: profile.profilepic || null,
+      uhemail: profile.uhemail,
+      username: profile.username,
+      firstName: profile.firstName,
+      lastName: profile.lastName,
+      major: profile.major,
+      standing: standing(profile.standing),
+    },
+  });
+  redirect('/schedule');
+}
+
 
 /**
  * Edits an existing stuff in the database.
@@ -153,4 +188,54 @@ export async function changePassword(credentials: { email: string; password: str
       password,
     },
   });
+}
+
+// 1. Update Username
+export async function updateUsername(uhemail: string, newUsername: string) {
+  await prisma.profile.update({
+    where: { uhemail },
+    data: { username: newUsername },
+  });
+  revalidatePath('/profile');
+}
+
+// 2. Update Email (updates both User login and Profile record)
+export async function updateEmail(oldEmail: string, newEmail: string) {
+  await prisma.$transaction([
+    prisma.user.update({
+      where: { email: oldEmail },
+      data: { email: newEmail },
+    }),
+    prisma.profile.update({
+      where: { uhemail: oldEmail },
+      data: { uhemail: newEmail },
+    }),
+  ]);
+  revalidatePath('/profile');
+}
+
+// 4. Update Profile Picture URL
+export async function updateProfilePic(uhemail: string, profilepic: string) {
+  await prisma.profile.update({
+    where: { uhemail },
+    data: { profilepic: profilepic || null },
+  });
+  revalidatePath('/profile');
+}
+
+// 3. Update Password (hashes password on User model)
+export async function updatePassword(email: string, newPassword: string) {
+  const hashedPassword = await hash(newPassword, 10);
+  await prisma.user.update({
+    where: { email },
+    data: { password: hashedPassword },
+  });
+}
+
+export async function deleteSpot(id: number) {
+  await prisma.spot.delete({
+    where: { id },
+  });
+  revalidatePath('/profile');
+  revalidatePath('/spots');
 }

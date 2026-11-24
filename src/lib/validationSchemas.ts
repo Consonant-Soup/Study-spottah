@@ -46,3 +46,20 @@ export const EditStuffSchema = Yup.object({
   condition: Yup.string().oneOf(['excellent', 'good', 'fair', 'poor']).required(),
   owner: Yup.string().required(),
 });
+
+export const AddProfileSchema = Yup.object({
+  firstName: Yup.string().required('First name is required'),
+  lastName: Yup.string().required('Last name is required'),
+  uhemail: Yup.string()
+    .email('Invalid email format')
+    .required('Email is required'),
+  username: Yup.string().required('Please pick a username'),
+  major: Yup.string().required('Major is required'),
+  standing: Yup.string()
+    .oneOf(['freshman', 'sophmore', 'junior', 'senior', 'masters', 'phd'])
+    .required('Standing is required'),
+  profilepic: Yup.string()
+    .transform((value) => (value === '' ? undefined : value))
+    .url('Must be a valid URL')
+    .optional(),
+});

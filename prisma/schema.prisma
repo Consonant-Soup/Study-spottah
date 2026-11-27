@@ -57,6 +57,8 @@ model Profile {
   lastName      String
   major         String
   standing      Standing @default(freshman)
+  convenedMeetings Meeting[] @relation("MeetingConvener")
+  meetingParticipations MeetingParticipant[]
 }
 
 enum YesNoUnknown {
@@ -97,4 +99,46 @@ model Spot {
   majors      Major[]
   seating     YesNoUnknown @default(unknown)
   computers   YesNoUnknown @default(unknown)
+  meetings    Meeting[]
+}
+
+enum MeetingStatus {
+  scheduled
+  cancelled
+}
+
+enum MeetingResponse {
+  pending
+  accepted
+  declined
+}
+
+model Meeting {
+  id                 Int                 @id @default(autoincrement())
+  spotId             Int
+  convenerProfileId  Int
+  startAt            DateTime            @db.Timestamptz(3)
+  endAt              DateTime            @db.Timestamptz(3)
+  timeZone           String
+  status             MeetingStatus       @default(scheduled)
+  createdAt          DateTime            @default(now()) @db.Timestamptz(3)
+  spot               Spot                @relation(fields: [spotId], references: [id], onDelete: Restrict)
+  convener           Profile             @relation("MeetingConvener", fields: [convenerProfileId], references: [id], onDelete: Restrict)
+  participants       MeetingParticipant[]
+
+  @@index([startAt, status])
+  @@index([convenerProfileId])
+}
+
+model MeetingParticipant {
+  meetingId         Int
+  profileId         Int
+  response          MeetingResponse @default(pending)
+  reminderSentAt    DateTime?       @db.Timestamptz(3)
+  reminderClaimedAt DateTime?       @db.Timestamptz(3)
+  meeting           Meeting         @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  profile           Profile         @relation(fields: [profileId], references: [id], onDelete: Restrict)
+
+  @@id([meetingId, profileId])
+  @@index([profileId, response])
 }

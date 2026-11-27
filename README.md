@@ -61,6 +61,12 @@ npm run seed
 npm run dev
 ```
 
+### Study meeting scheduling and reminders
+
+The schedule page creates meetings between the signed-in user's `Profile` and one invited profile. It stores the selected `Spot` ID, meeting times, and each person's response. The convener is accepted automatically; the invitee can accept or decline, and only the convener can cancel an upcoming meeting.
+
+Apply the meeting migration with `npx prisma migrate dev` locally or `npx prisma migrate deploy` in production. Set `RESEND_API_KEY`, `EMAIL_FROM` (a sender verified with Resend), and a strong random `CRON_SECRET` in the server environment. The configured Vercel Cron calls `/api/cron/meeting-reminders` every five minutes; it sends a reminder about an hour before the meeting to each participant whose response is accepted. This frequency requires a Vercel plan that supports five-minute cron intervals. Meeting times and reminder formatting use the convener's browser time zone. Vercel Cron and Resend credentials must be configured in the deployed project's environment.
+
 Visit `http://localhost:3000` for the original Study Spottah home, and `http://localhost:3000/transit` for the integrated route. After database seeding, the original issue-1 sample accounts are documented in `config/settings.development.json`; default seed password is `changeme` in the supplied template. For local-only use, do not use that password in production.
 
 ### Verify navbar by session state

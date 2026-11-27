@@ -2,17 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
-import SpotsSection from '@/components/spots/SpotsSection';
+import type { ScheduleMeeting } from '@/components/ScheduleInvitesPanel';
 import ScheduleInvitesPanel from '@/components/ScheduleInvitesPanel';
 import styles from './page.module.css';
 
-const SchedulePageContent = () => {
-  const router = useRouter();
+type SchedulePageContentProps = {
+  spots: { id: number; location: string }[];
+  meetings: ScheduleMeeting[];
+};
 
-  // Keep the spot name in the URL so the mock scheduling flow can be opened directly.
-  const handleSpotSelect = (spotName: string) => {
-    router.push(`/schedule/calendar?spot=${encodeURIComponent(spotName)}`);
-  };
+const SchedulePageContent = ({ spots, meetings }: SchedulePageContentProps) => {
+  const router = useRouter();
 
   return (
     <main className={styles.page}>
@@ -22,7 +22,7 @@ const SchedulePageContent = () => {
             <p className={styles.eyebrow}>Study groups</p>
             <h1 className={styles.heading}>Plan or join a study session</h1>
             <p className={styles.intro}>
-              Start a group at a spot you choose, or accept an invitation to join someone else.
+              Choose a spot and invite one person to meet with you.
             </p>
           </Col>
         </Row>
@@ -31,19 +31,35 @@ const SchedulePageContent = () => {
             <section aria-labelledby="plan-session-title">
               <div className={styles.sectionHeading}>
                 <div>
-                  <p className={styles.eyebrow}>Start a group</p>
+                  <p className={styles.eyebrow}>Start a meeting</p>
                   <h2 id="plan-session-title">Choose a study spot</h2>
                 </div>
-                {/* <span className={styles.sectionNumber}>01</span> */}
               </div>
               <p className={styles.sectionIntro}>
-                Browse the map or switch to the list to pick a place and time.
+                Select a spot from the database, then choose a date, time, and invitee.
               </p>
-              <SpotsSection onSpotSelect={handleSpotSelect} />
+              {spots.length === 0 ? (
+                <p>No study spots are available yet.</p>
+              ) : (
+                <ul className={styles.databaseSpotList}>
+                  {spots.map((spot) => (
+                    <li key={spot.id}>
+                      <span>{spot.location}</span>
+                      <button
+                        className={styles.chooseSpotButton}
+                        onClick={() => router.push(`/schedule/calendar?spot=${spot.id}`)}
+                        type="button"
+                      >
+                        Choose spot
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </section>
           </Col>
           <Col lg={5}>
-            <ScheduleInvitesPanel />
+            <ScheduleInvitesPanel meetings={meetings} />
           </Col>
         </Row>
       </Container>

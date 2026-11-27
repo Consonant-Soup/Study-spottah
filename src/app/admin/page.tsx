@@ -1,3 +1,4 @@
+import { Role } from '@prisma/client';
 import { Container, Table } from 'react-bootstrap';
 import { prisma } from '@/lib/prisma';
 import { adminProtectedPage } from '@/lib/page-protection';
@@ -10,7 +11,10 @@ const AdminPage = async () => {
       user: { email: string; id: string; name: string };
     } | null,
   );
-  const users = await prisma.user.findMany({});
+  const users = await prisma.$queryRaw<{ id: number; email: string; role: Role }[]>`
+    SELECT "id", "email", "role"
+    FROM "User"
+  `;
 
   return (
     <main>

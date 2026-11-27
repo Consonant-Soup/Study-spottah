@@ -1,49 +1,28 @@
 'use client';
 
-import { useState } from 'react';
 import styles from './ScheduleInvitesForm.module.css';
 
 type ScheduleInvitesFormProps = {
   sessionDate: string;
   sessionTime: string;
-  usernames: string[];
-  onUsernamesChange: (usernames: string[]) => void;
+  username: string;
+  onUsernameChange: (username: string) => void;
   onBack: () => void;
   onSend: () => void;
+  isPending: boolean;
+  error: string;
 };
 
 const ScheduleInvitesForm = ({
   sessionDate,
   sessionTime,
-  usernames,
-  onUsernamesChange,
+  username,
+  onUsernameChange,
   onBack,
   onSend,
+  isPending,
+  error,
 }: ScheduleInvitesFormProps) => {
-  const [usernameInput, setUsernameInput] = useState('');
-  const [error, setError] = useState('');
-
-  const handleAddUsername = () => {
-    // Normalize the display value before checking for duplicate usernames.
-    const username = usernameInput.trim().replace(/^@/, '');
-    if (!username) {
-      setError('Enter a username to add.');
-      return;
-    }
-    if (usernames.some((existing) => existing.toLowerCase() === username.toLowerCase())) {
-      setError('That username has already been added.');
-      return;
-    }
-
-    onUsernamesChange([...usernames, username]);
-    setUsernameInput('');
-    setError('');
-  };
-
-  const handleRemoveUsername = (username: string) => {
-    onUsernamesChange(usernames.filter((entry) => entry !== username));
-  };
-
   return (
     <section className={styles.card} aria-labelledby="guest-step-title">
       <div className={styles.cardHeader}>
@@ -57,49 +36,30 @@ const ScheduleInvitesForm = ({
         className={styles.usernameForm}
         onSubmit={(event) => {
           event.preventDefault();
-          handleAddUsername();
+          onSend();
         }}
       >
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Invitee username</label>
         <div className={styles.inputRow}>
           <input
             autoComplete="off"
             id="username"
-            onChange={(event) => setUsernameInput(event.target.value)}
+            onChange={(event) => onUsernameChange(event.target.value)}
             placeholder="Enter a username"
-            value={usernameInput}
+            value={username}
           />
-          <button className={styles.secondaryButton} type="submit">Add person</button>
         </div>
-        <p className={styles.helper}>This mockup does not check whether usernames exist.</p>
+        <p className={styles.helper}>Enter the username from their study profile.</p>
         {error && <p className={styles.error} role="alert">{error}</p>}
       </form>
-      {usernames.length > 0 && (
-        <ul className={styles.usernameList} aria-label="Added users">
-          {usernames.map((username) => (
-            <li key={username}>
-              <span>@{username}</span>
-              <button
-                aria-label={`Remove @${username}`}
-                className={styles.removeButton}
-                onClick={() => handleRemoveUsername(username)}
-                type="button"
-              >
-                Remove
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
       <div className={styles.cardFooter}>
         <button className={styles.textButton} onClick={onBack} type="button">Back to date</button>
         <button
           className={styles.primaryButton}
-          disabled={usernames.length === 0}
-          onClick={onSend}
-          type="button"
+          disabled={!username.trim() || isPending}
+          type="submit"
         >
-          Send invitations
+          {isPending ? 'Scheduling...' : 'Send invitation'}
         </button>
       </div>
     </section>

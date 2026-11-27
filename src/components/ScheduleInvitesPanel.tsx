@@ -1,126 +1,148 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
+import { cancelScheduledMeeting, respondToMeeting } from '@/app/schedule/actions';
 import styles from './ScheduleInvitesPanel.module.css';
 
-type InvitationStatus = 'pending' | 'accepted' | 'declined';
-
-type Invitation = {
+export type ScheduleMeeting = {
   id: number;
-  host: string;
-  username: string;
-  spot: string;
-  date: string;
-  time: string;
-  groupSize: number;
-  status: InvitationStatus;
+  spotLocation: string;
+  startAt: string;
+  endAt: string;
+  timeZone: string;
+  status: 'scheduled' | 'cancelled';
+  response: 'pending' | 'accepted' | 'declined';
+  otherParticipantResponse: 'pending' | 'accepted' | 'declined';
+  isConvener: boolean;
+  otherParticipantName: string;
+  otherParticipantUsername: string | null;
 };
 
-const sampleInvitations: Invitation[] = [
-  {
-    id: 1,
-    host: 'Brian Yao',
-    username: '@briyao',
-    spot: 'Study spot 2',
-    date: 'Thu, Nov 19',
-    time: '3:00–5:00 PM',
-    groupSize: 3,
-    status: 'pending',
-  },
-  {
-    id: 2,
-    host: 'Tishya Chhabra',
-    username: '@tischh',
-    spot: 'Study spot 1',
-    date: 'Fri, Nov 20',
-    time: '10:00 AM–12:00 PM',
-    groupSize: 2,
-    status: 'pending',
-  },
-];
+type ScheduleInvitesPanelProps = {
+  meetings: ScheduleMeeting[];
+};
 
-const ScheduleInvitesPanel = () => {
-  const [invitations, setInvitations] = useState(sampleInvitations);
-  const pendingCount = invitations.filter((invitation) => invitation.status === 'pending').length;
+const displayedResponse = (meeting: ScheduleMeeting) =>
+  meeting.isConvener ? meeting.otherParticipantResponse : meeting.response;
 
-  // Keep responses local to this mockup instead of sending them to a service.
-  const updateInvitation = (id: number, status: InvitationStatus) => {
-    setInvitations((current) =>
-      current.map((invitation) =>
-        invitation.id === id ? { ...invitation, status } : invitation,
-      ),
-    );
+const formatMeetingDate = (date: string, timeZone: string) =>
+  new Intl.DateTimeFormat('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    timeZone,
+  }).format(new Date(date));
+
+const formatMeetingTime = (startAt: string, endAt: string, timeZone: string) => {
+  const options: Intl.DateTimeFormatOptions = { hour: 'numeric', minute: '2-digit', timeZone };
+  const formatter = new Intl.DateTimeFormat('en-US', options);
+  return `${formatter.format(new Date(startAt))}–${formatter.format(new Date(endAt))}`;
+};
+
+const ScheduleInvitesPanel = ({ meetings }: ScheduleInvitesPanelProps) => {
+  const [error, setError] = useState('');
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
+  const pendingCount = meetings.filter(
+    (meeting) => !meeting.isConvener && meeting.response === 'pending' && meeting.status === 'scheduled',
+  ).length;
+
+  const runAction = (action: () => Promise<{ error?: string }>) => {
+    setError('');
+    startTransition(async () => {
+      const result = await action();
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+      router.refresh();
+    });
   };
 
   return (
     <section className={styles.panel} aria-labelledby="invitations-title">
       <header className={styles.panelHeader}>
         <div>
-          <p className={styles.eyebrow}>Your inbox</p>
-          <h2 id="invitations-title">Invitations</h2>
+          <p className={styles.eyebrow}>Your schedule</p>
+          <h2 id="invitations-title">Meetings &amp; invitations</h2>
         </div>
         <span className={styles.count} aria-label={`${pendingCount} pending invitations`}>
           {pendingCount}
         </span>
       </header>
       <p className={styles.description}>
-        Join a group that already has a place and time picked out.
+        Respond to invitations or manage meetings you have convened.
       </p>
-      <ul className={styles.invitationList}>
-        {invitations.map((invitation) => (
-          <li className={styles.invitation} key={invitation.id}>
-            <div className={styles.invitationTop}>
-              <div className={styles.host}>
-                <span className={styles.avatar} aria-hidden="true">
-                  {invitation.host.split(' ').map((part) => part[0]).join('')}
-                </span>
-                <span>
-                  <strong>{invitation.host}</strong>
-                  <small>{invitation.username}</small>
+      {error && <p className={styles.error} role="alert">{error}</p>}
+      {meetings.length === 0 ? (
+        <p className={styles.description}>You do not have any meetings yet.</p>
+      ) : (
+        <ul className={styles.invitationList}>
+          {meetings.map((meeting) => (
+            <li className={styles.invitation} key={meeting.id}>
+              <div className={styles.invitationTop}>
+                <div className={styles.host}>
+                  <span className={styles.avatar} aria-hidden="true">
+                    {meeting.otherParticipantName.split(' ').map((part) => part[0]).join('')}
+                  </span>
+                  <span>
+                    <strong>{meeting.isConvener ? 'Invited' : 'Convened by'} {meeting.otherParticipantName}</strong>
+                    {meeting.otherParticipantUsername && (
+                      <small>@{meeting.otherParticipantUsername}</small>
+                    )}
+                  </span>
+                </div>
+                <span className={`${styles.status} ${styles[meeting.status === 'cancelled' ? 'declined' : displayedResponse(meeting)]}`}>
+                  {meeting.status === 'cancelled'
+                    ? 'Cancelled'
+                    : meeting.isConvener
+                      ? `Invitee ${displayedResponse(meeting)}`
+                      : displayedResponse(meeting)[0].toUpperCase() + displayedResponse(meeting).slice(1)}
                 </span>
               </div>
-              <span className={`${styles.status} ${styles[invitation.status]}`} aria-live="polite">
-                {invitation.status === 'pending'
-                  ? 'Pending'
-                  : invitation.status === 'accepted'
-                    ? 'Accepted'
-                    : 'Declined'}
-              </span>
-            </div>
-            <p className={styles.spot}>{invitation.spot}</p>
-            <p className={styles.details}>
-              {invitation.date} <span aria-hidden="true">·</span> {invitation.time}
-            </p>
-            <p className={styles.groupSize}>
-              {invitation.groupSize} {invitation.groupSize === 1 ? 'person' : 'people'} in the group
-            </p>
-            {invitation.status === 'pending' ? (
-              <div className={styles.actions}>
-                <button
-                  className={styles.acceptButton}
-                  onClick={() => updateInvitation(invitation.id, 'accepted')}
-                  type="button"
-                >
-                  Accept
-                </button>
-                <button
-                  className={styles.declineButton}
-                  onClick={() => updateInvitation(invitation.id, 'declined')}
-                  type="button"
-                >
-                  Decline
-                </button>
-              </div>
-            ) : (
-              <p className={styles.response}>
-                {invitation.status === 'accepted'
-                  ? 'You’re joining this study group.'
-                  : 'This invitation was declined.'}
+              <p className={styles.spot}>{meeting.spotLocation}</p>
+              <p className={styles.details}>
+                {formatMeetingDate(meeting.startAt, meeting.timeZone)} ·{' '}
+                {formatMeetingTime(meeting.startAt, meeting.endAt, meeting.timeZone)}
               </p>
-            )}
-          </li>
-        ))}
-      </ul>
+              {meeting.status === 'scheduled' && !meeting.isConvener && meeting.response === 'pending' && (
+                <div className={styles.actions}>
+                  <button
+                    className={styles.acceptButton}
+                    disabled={isPending}
+                    onClick={() => runAction(() => respondToMeeting(meeting.id, 'accepted'))}
+                    type="button"
+                  >
+                    Accept
+                  </button>
+                  <button
+                    className={styles.declineButton}
+                    disabled={isPending}
+                    onClick={() => runAction(() => respondToMeeting(meeting.id, 'declined'))}
+                    type="button"
+                  >
+                    Decline
+                  </button>
+                </div>
+              )}
+              {meeting.status === 'scheduled' && meeting.isConvener && (
+                <div className={styles.actions}>
+                  <button
+                    className={styles.declineButton}
+                    disabled={isPending}
+                    onClick={() => runAction(() => cancelScheduledMeeting(meeting.id))}
+                    type="button"
+                  >
+                    Cancel meeting
+                  </button>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 };

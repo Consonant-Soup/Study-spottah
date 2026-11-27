@@ -1,7 +1,8 @@
-import { redirect } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import ScheduleCalender from '@/components/ScheduleCalender';
 import { auth } from '@/lib/auth';
 import { loggedInProtectedPage } from '@/lib/page-protection';
+import { prisma } from '@/lib/prisma';
 
 type ScheduleCalendarPageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,13 +17,20 @@ const ScheduleCalendarPage = async ({ searchParams }: ScheduleCalendarPageProps)
   );
 
   const search = await searchParams;
-  const spot = Array.isArray(search.spot) ? search.spot[0] : search.spot;
+  const rawSpotId = Array.isArray(search.spot) ? search.spot[0] : search.spot;
+  const spotId = Number(rawSpotId);
 
-  if (!spot?.trim()) {
+  if (!Number.isSafeInteger(spotId) || spotId <= 0) {
     redirect('/schedule');
   }
 
-  return <ScheduleCalender spotName={spot} />;
+  const spot = await prisma.spot.findUnique({
+    where: { id: spotId },
+    select: { id: true, location: true },
+  });
+  if (!spot) notFound();
+
+  return <ScheduleCalender spotId={spot.id} spotName={spot.location} />;
 };
 
 export default ScheduleCalendarPage;

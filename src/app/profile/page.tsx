@@ -1,7 +1,8 @@
-import { Role } from '@prisma/client';
+import { Role, type Spot } from '@prisma/client';
 import { auth } from '@/lib/auth';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { prisma } from '@/lib/prisma';
+import { findProfileByEmail } from '@/lib/profile-queries';
 import AddProfileForm from '@/components/AddProfileForm';
 import ProfileView from '@/components/SpotsProfile';
 import AdminProfileView from '@/components/SpotsAdminProfile';
@@ -17,9 +18,7 @@ const ProfilePage = async () => {
   const userEmail = session?.user?.email || '';
 
   const [profile, currentUser] = await Promise.all([
-    prisma.profile.findUnique({
-      where: { uhemail: userEmail },
-    }),
+    findProfileByEmail(userEmail),
     prisma.user.findUnique({
       where: { email: userEmail },
       select: { role: true },
@@ -42,9 +41,11 @@ const ProfilePage = async () => {
     const [totalUsers, totalProfiles, spots] = await Promise.all([
       prisma.user.count(),
       prisma.profile.count(),
-      prisma.spot.findMany({
-        orderBy: { id: 'desc' },
-      }),
+      prisma.$queryRaw<Spot[]>`
+        SELECT *
+        FROM "Spot"
+        ORDER BY "id" DESC
+      `,
     ]);
 
     return (

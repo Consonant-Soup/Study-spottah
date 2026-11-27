@@ -35,10 +35,10 @@ const AddProfileForm: React.FC<AddProfileFormProps> = ({ defaultEmail = '' }) =>
   });
 
   const onSubmit = async (data: ProfileFormValues) => {
-    swal('Success', 'Your profile has been created!', 'success', {
-      timer: 2000,
-    });
-    await addProfiles(data);
+    const result = await addProfiles(data);
+    if (result.error) {
+      swal('Profile not created', result.error, 'error');
+    }
   };
 
   const handleReset = () => {

@@ -1,12 +1,15 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
+import { createScheduledMeeting } from '@/app/schedule/actions';
 import ScheduleInvitesForm from './ScheduleInvitesForm';
 import styles from './ScheduleCalender.module.css';
 
 type ScheduleCalenderProps = {
+  spotId: number;
   spotName: string;
 };
 
@@ -95,13 +98,16 @@ const MonthCalendar = ({
   </section>
 );
 
-const ScheduleCalender = ({ spotName }: ScheduleCalenderProps) => {
+const ScheduleCalender = ({ spotId, spotName }: ScheduleCalenderProps) => {
+  const router = useRouter();
   const [now, setNow] = useState(() => new Date());
   const [selectedDate, setSelectedDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [step, setStep] = useState<'date' | 'guests' | 'complete'>('date');
-  const [usernames, setUsernames] = useState<string[]>([]);
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  const [isPending, startTransition] = useTransition();
 
   // Refresh the date boundary in the open page so tomorrow is always calculated from real time.
   useEffect(() => {
@@ -144,6 +150,29 @@ const ScheduleCalender = ({ spotName }: ScheduleCalenderProps) => {
     if (value && endTime <= value) {
       setEndTime('');
     }
+  };
+
+  const handleSendInvitation = () => {
+    if (!availableSelectedDate || !startTime || !endTime || !username.trim()) return;
+
+    const startAt = new Date(`${availableSelectedDate}T${startTime}:00`);
+    const endAt = new Date(`${availableSelectedDate}T${endTime}:00`);
+    setError('');
+    startTransition(async () => {
+      const result = await createScheduledMeeting({
+        spotId,
+        inviteeUsername: username.trim(),
+        startAt: startAt.toISOString(),
+        endAt: endAt.toISOString(),
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      });
+      if (result.error) {
+        setError(result.error);
+        return;
+      }
+      setStep('complete');
+      router.refresh();
+    });
   };
 
   return (
@@ -230,11 +259,13 @@ const ScheduleCalender = ({ spotName }: ScheduleCalenderProps) => {
             {step === 'guests' && (
               <ScheduleInvitesForm
                 onBack={() => setStep('date')}
-                onSend={() => setStep('complete')}
-                onUsernamesChange={setUsernames}
+                onSend={handleSendInvitation}
+                onUsernameChange={setUsername}
                 sessionDate={sessionDate}
                 sessionTime={`${timeOptions.find((option) => option.value === startTime)?.label}–${timeOptions.find((option) => option.value === endTime)?.label}`}
-                usernames={usernames}
+                username={username}
+                isPending={isPending}
+                error={error}
               />
             )}
 
@@ -244,12 +275,11 @@ const ScheduleCalender = ({ spotName }: ScheduleCalenderProps) => {
                 <div className={styles.completionMark} aria-hidden="true">✓</div>
                 <h2 className={styles.completionTitle} id="complete-title">Invitations sent!</h2>
                 <p className={styles.completionText}>
-                  Your invitation for {spotName} on {sessionDate} has been sent to:
+                  Your invitation for {spotName} on {sessionDate} is awaiting a response from:
                 </p>
                 <ul className={styles.completionList}>
-                  {usernames.map((username) => <li key={username}>@{username}</li>)}
+                  <li>@{username.trim().replace(/^@/, '')}</li>
                 </ul>
-                <p className={styles.helper}>This is a mockup. No invitations were actually sent.</p>
                 <Link className={styles.primaryButton} href="/schedule">
                   Schedule another session
                 </Link>

@@ -1,6 +1,6 @@
 'use server';
 
-import { Condition, YesNoUnknown, NoiseLevel, Major, Standing } from '@prisma/client';
+import { Condition, YesNoUnknown, NoiseLevel, Major, Standing, Prisma } from '@prisma/client';
 import { Stuff } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
@@ -112,18 +112,30 @@ export async function addProfiles(profile: {
   lastName: string;
   major: string;
   standing: string;
-}) {
-  await prisma.profile.create({
-    data: {
-      profilepic: profile.profilepic || null,
-      uhemail: profile.uhemail,
-      username: profile.username,
-      firstName: profile.firstName,
-      lastName: profile.lastName,
-      major: profile.major,
-      standing: standing(profile.standing),
-    },
-  });
+}): Promise<{ error?: string }> {
+  const data = {
+    profilepic: profile.profilepic || null,
+    uhemail: profile.uhemail,
+    username: profile.username,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    major: profile.major,
+    standing: standing(profile.standing),
+  };
+
+  try {
+    await prisma.profile.upsert({
+      where: { uhemail: profile.uhemail },
+      update: data,
+      create: data,
+    });
+  } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+      return { error: 'That email or username is already in use.' };
+    }
+    throw error;
+  }
+
   redirect('/schedule');
 }
 

@@ -56,6 +56,12 @@
   line-height: 1.5;
 }
 
+.error {
+  margin: 0 0 1rem;
+  color: #8b1e1e;
+  font-size: 0.85rem;
+}
+
 .invitationList {
   display: grid;
   gap: 0.75rem;

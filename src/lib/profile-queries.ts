@@ -31,7 +31,7 @@ export async function findProfileByUsername(username: string): Promise<Profile |
       "major",
       "standing"
     FROM "Profile"
-    WHERE "username" = ${username}
+    WHERE LOWER("username") = LOWER(${username})
     LIMIT 1
   `;
   return profiles[0] ?? null;

@@ -4,6 +4,7 @@ import * as config from '../config/settings.development.json';
 import { PrismaPg } from '@prisma/adapter-pg'
 import pg from 'pg'
 import 'dotenv/config'
+import { seedFirstFloorSpot } from '../src/lib/seedFirstFloorSpot'
 
 // Initialize the database pool
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_URL })
@@ -72,6 +73,7 @@ async function main() {
       },
     });
   }
+  await seedFirstFloorSpot(prisma);
 }
 main()
   .then(() => prisma.$disconnect())

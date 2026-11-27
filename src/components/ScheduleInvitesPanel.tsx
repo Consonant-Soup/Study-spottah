@@ -13,18 +13,17 @@ export type ScheduleMeeting = {
   timeZone: string;
   status: 'scheduled' | 'cancelled';
   response: 'pending' | 'accepted' | 'declined';
-  otherParticipantResponse: 'pending' | 'accepted' | 'declined';
+  otherParticipants: {
+    response: 'pending' | 'accepted' | 'declined';
+    name: string;
+    username: string | null;
+  }[];
   isConvener: boolean;
-  otherParticipantName: string;
-  otherParticipantUsername: string | null;
 };
 
 type ScheduleInvitesPanelProps = {
   meetings: ScheduleMeeting[];
 };
-
-const displayedResponse = (meeting: ScheduleMeeting) =>
-  meeting.isConvener ? meeting.otherParticipantResponse : meeting.response;
 
 const formatMeetingDate = (date: string, timeZone: string) =>
   new Intl.DateTimeFormat('en-US', {
@@ -85,21 +84,18 @@ const ScheduleInvitesPanel = ({ meetings }: ScheduleInvitesPanelProps) => {
               <div className={styles.invitationTop}>
                 <div className={styles.host}>
                   <span className={styles.avatar} aria-hidden="true">
-                    {meeting.otherParticipantName.split(' ').map((part) => part[0]).join('')}
+                    {meeting.isConvener ? 'You' : 'Group'}
                   </span>
-                  <span>
-                    <strong>{meeting.isConvener ? 'Invited' : 'Convened by'} {meeting.otherParticipantName}</strong>
-                    {meeting.otherParticipantUsername && (
-                      <small>@{meeting.otherParticipantUsername}</small>
-                    )}
-                  </span>
+                  <strong>
+                    {meeting.isConvener
+                      ? `You invited ${meeting.otherParticipants.length} ${meeting.otherParticipants.length === 1 ? 'person' : 'people'}`
+                      : 'Study group meeting'}
+                  </strong>
                 </div>
-                <span className={`${styles.status} ${styles[meeting.status === 'cancelled' ? 'declined' : displayedResponse(meeting)]}`}>
+                <span className={`${styles.status} ${styles[meeting.status === 'cancelled' ? 'declined' : meeting.response]}`}>
                   {meeting.status === 'cancelled'
                     ? 'Cancelled'
-                    : meeting.isConvener
-                      ? `Invitee ${displayedResponse(meeting)}`
-                      : displayedResponse(meeting)[0].toUpperCase() + displayedResponse(meeting).slice(1)}
+                    : meeting.response[0].toUpperCase() + meeting.response.slice(1)}
                 </span>
               </div>
               <p className={styles.spot}>{meeting.spotLocation}</p>
@@ -107,6 +103,25 @@ const ScheduleInvitesPanel = ({ meetings }: ScheduleInvitesPanelProps) => {
                 {formatMeetingDate(meeting.startAt, meeting.timeZone)} ·{' '}
                 {formatMeetingTime(meeting.startAt, meeting.endAt, meeting.timeZone)}
               </p>
+              <ul className={styles.participantList} aria-label="Meeting participants">
+                <li>
+                  You
+                  <span className={`${styles.status} ${styles[meeting.response]}`}>
+                    {meeting.response[0].toUpperCase() + meeting.response.slice(1)}
+                  </span>
+                </li>
+                {meeting.otherParticipants.map((participant) => (
+                  <li key={`${participant.username ?? participant.name}-${participant.name}`}>
+                    <span>
+                      {participant.name}
+                      {participant.username && <small> @{participant.username}</small>}
+                    </span>
+                    <span className={`${styles.status} ${styles[participant.response]}`}>
+                      {participant.response[0].toUpperCase() + participant.response.slice(1)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
               {meeting.status === 'scheduled' && !meeting.isConvener && meeting.response === 'pending' && (
                 <div className={styles.actions}>
                   <button

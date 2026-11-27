@@ -59,40 +59,6 @@
   line-height: 1.6;
 }
 
-.databaseSpotList {
-  display: grid;
-  gap: 0.65rem;
-  padding: 0;
-  margin: 0;
-  list-style: none;
-}
-
-.databaseSpotList li {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--schedule-accent);
-  background: #fff;
-}
-
-.chooseSpotButton {
-  min-height: 2.4rem;
-  padding: 0.45rem 0.75rem;
-  border: 1px solid var(--schedule-main);
-  border-radius: 0;
-  background: var(--schedule-main);
-  color: #000;
-  font: inherit;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.chooseSpotButton:hover {
-  background: var(--schedule-accent);
-}
-
 .page :global(.btn) {
   border-color: var(--schedule-main);
   border-radius: 0;

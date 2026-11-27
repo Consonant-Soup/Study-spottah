@@ -2,6 +2,7 @@ import { prisma } from './lib/prisma';
 import { Role, Condition } from '@prisma/client';
 import { hash } from 'bcrypt';
 import * as config from '../config/settings.development.json';
+import { seedFirstFloorSpot } from './lib/seedFirstFloorSpot';
 
 async function main() {
   console.log('Seeding the database');
@@ -35,6 +36,7 @@ async function main() {
       },
     });
   }
+  await seedFirstFloorSpot(prisma);
 }
 main()
   .then(() => prisma.$disconnect())

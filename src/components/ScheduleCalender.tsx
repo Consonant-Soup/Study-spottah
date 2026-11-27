@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
 import { createScheduledMeeting } from '@/app/schedule/actions';
-import ScheduleInvitesForm from './ScheduleInvitesForm';
+import ScheduleInvitesForm, { type MeetingInvitee } from './ScheduleInvitesForm';
 import styles from './ScheduleCalender.module.css';
 
 type ScheduleCalenderProps = {
@@ -105,7 +105,7 @@ const ScheduleCalender = ({ spotId, spotName }: ScheduleCalenderProps) => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [step, setStep] = useState<'date' | 'guests' | 'complete'>('date');
-  const [username, setUsername] = useState('');
+  const [invitees, setInvitees] = useState<MeetingInvitee[]>([]);
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
@@ -153,7 +153,7 @@ const ScheduleCalender = ({ spotId, spotName }: ScheduleCalenderProps) => {
   };
 
   const handleSendInvitation = () => {
-    if (!availableSelectedDate || !startTime || !endTime || !username.trim()) return;
+    if (!availableSelectedDate || !startTime || !endTime || invitees.length === 0) return;
 
     const startAt = new Date(`${availableSelectedDate}T${startTime}:00`);
     const endAt = new Date(`${availableSelectedDate}T${endTime}:00`);
@@ -161,7 +161,7 @@ const ScheduleCalender = ({ spotId, spotName }: ScheduleCalenderProps) => {
     startTransition(async () => {
       const result = await createScheduledMeeting({
         spotId,
-        inviteeUsername: username.trim(),
+        inviteeUsernames: invitees.map((invitee) => invitee.username),
         startAt: startAt.toISOString(),
         endAt: endAt.toISOString(),
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -260,10 +260,10 @@ const ScheduleCalender = ({ spotId, spotName }: ScheduleCalenderProps) => {
               <ScheduleInvitesForm
                 onBack={() => setStep('date')}
                 onSend={handleSendInvitation}
-                onUsernameChange={setUsername}
+                onInviteesChange={setInvitees}
                 sessionDate={sessionDate}
                 sessionTime={`${timeOptions.find((option) => option.value === startTime)?.label}–${timeOptions.find((option) => option.value === endTime)?.label}`}
-                username={username}
+                invitees={invitees}
                 isPending={isPending}
                 error={error}
               />
@@ -278,7 +278,9 @@ const ScheduleCalender = ({ spotId, spotName }: ScheduleCalenderProps) => {
                   Your invitation for {spotName} on {sessionDate} is awaiting a response from:
                 </p>
                 <ul className={styles.completionList}>
-                  <li>@{username.trim().replace(/^@/, '')}</li>
+                  {invitees.map((invitee) => (
+                    <li key={invitee.username}>@{invitee.username}</li>
+                  ))}
                 </ul>
                 <Link className={styles.primaryButton} href="/schedule">
                   Schedule another session

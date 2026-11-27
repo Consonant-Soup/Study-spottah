@@ -8,6 +8,11 @@ import { findProfileByEmail, findProfileByUsername } from '@/lib/profile-queries
 
 type ActionResult = { error?: string; success?: true };
 
+type InviteeLookupResult = {
+  error?: string;
+  invitee?: { username: string; name: string };
+};
+
 async function getCurrentProfile() {
   const session = await auth();
   const email = session?.user?.email;
@@ -16,9 +21,32 @@ async function getCurrentProfile() {
   return findProfileByEmail(email);
 }
 
+export async function lookupInviteeForMeeting(username: string): Promise<InviteeLookupResult> {
+  const convener = await getCurrentProfile();
+  if (!convener) return { error: 'Your profile is required to invite people.' };
+  if (typeof username !== 'string') return { error: 'Enter a valid username.' };
+
+  const normalizedUsername = username.trim().replace(/^@/, '');
+  if (!normalizedUsername || normalizedUsername.length > 50) {
+    return { error: 'Enter a valid username.' };
+  }
+
+  const invitee = await findProfileByUsername(normalizedUsername);
+  if (!invitee) return { error: `No profile exists for @${normalizedUsername}.` };
+  if (invitee.id === convener.id) return { error: 'You cannot invite yourself.' };
+  if (!invitee.username) return { error: 'That profile does not have a username.' };
+
+  return {
+    invitee: {
+      username: invitee.username,
+      name: `${invitee.firstName} ${invitee.lastName}`,
+    },
+  };
+}
+
 export async function createScheduledMeeting(input: {
   spotId: number;
-  inviteeUsername: string;
+  inviteeUsernames: string[];
   startAt: string;
   endAt: string;
   timeZone: string;
@@ -27,7 +55,8 @@ export async function createScheduledMeeting(input: {
     !input ||
     !Number.isSafeInteger(input.spotId) ||
     input.spotId <= 0 ||
-    typeof input.inviteeUsername !== 'string' ||
+    !Array.isArray(input.inviteeUsernames) ||
+    !input.inviteeUsernames.every((username) => typeof username === 'string') ||
     typeof input.startAt !== 'string' ||
     typeof input.endAt !== 'string' ||
     typeof input.timeZone !== 'string'
@@ -38,14 +67,23 @@ export async function createScheduledMeeting(input: {
   const convener = await getCurrentProfile();
   if (!convener) return { error: 'Your profile is required to schedule a meeting.' };
 
-  const inviteeUsername = input.inviteeUsername.trim().replace(/^@/, '');
-  if (!inviteeUsername || inviteeUsername.length > 50) {
-    return { error: 'Enter a valid username.' };
+  const inviteeUsernames = [...new Set(
+    input.inviteeUsernames.map((username) => username.trim().replace(/^@/, '').toLowerCase()),
+  )];
+  if (
+    inviteeUsernames.length === 0 ||
+    inviteeUsernames.some((username) => !username || username.length > 50)
+  ) {
+    return { error: 'Add at least one valid username.' };
   }
 
-  const invitee = await findProfileByUsername(inviteeUsername);
-  if (!invitee) return { error: 'No profile was found for that username.' };
-  if (invitee.id === convener.id) return { error: 'You cannot invite yourself.' };
+  const invitees = await Promise.all(inviteeUsernames.map(findProfileByUsername));
+  const missingUsername = inviteeUsernames[invitees.findIndex((invitee) => !invitee)];
+  if (missingUsername) return { error: `No profile exists for @${missingUsername}.` };
+  const validInvitees = invitees.filter((invitee) => invitee !== null);
+  if (validInvitees.some((invitee) => invitee.id === convener.id)) {
+    return { error: 'You cannot invite yourself.' };
+  }
 
   const startAt = new Date(input.startAt);
   const endAt = new Date(input.endAt);
@@ -74,12 +112,10 @@ export async function createScheduledMeeting(input: {
       startAt,
       endAt,
       timeZone: input.timeZone,
-      participants: {
-        create: [
-          { profileId: convener.id, response: MeetingResponse.accepted },
-          { profileId: invitee.id },
-        ],
-      },
+      participants: { create: [
+        { profileId: convener.id, response: MeetingResponse.accepted },
+        ...validInvitees.map((invitee) => ({ profileId: invitee.id })),
+      ] },
     },
   });
 

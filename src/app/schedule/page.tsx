@@ -14,9 +14,11 @@ type ScheduleMeetingRow = {
   status: 'scheduled' | 'cancelled';
   response: 'pending' | 'accepted' | 'declined';
   isConvener: boolean;
-  otherParticipantResponse: 'pending' | 'accepted' | 'declined';
-  otherParticipantName: string;
-  otherParticipantUsername: string | null;
+  otherParticipants: {
+    response: 'pending' | 'accepted' | 'declined';
+    name: string;
+    username: string | null;
+  }[];
 };
 
 const SchedulePage = async () => {
@@ -49,16 +51,26 @@ const SchedulePage = async () => {
         meeting."status",
         viewer."response" AS "response",
         meeting."convenerProfileId" = ${profile.id} AS "isConvener",
-        invitee."response" AS "otherParticipantResponse",
-        CONCAT(inviteeProfile."firstName", ' ', inviteeProfile."lastName") AS "otherParticipantName",
-        inviteeProfile."username" AS "otherParticipantUsername"
+        COALESCE(
+          JSON_AGG(
+            JSON_BUILD_OBJECT(
+              'response', attendee."response",
+              'name', CONCAT(attendeeProfile."firstName", ' ', attendeeProfile."lastName"),
+              'username', attendeeProfile."username"
+            )
+          ) FILTER (WHERE attendee."profileId" IS NOT NULL),
+          '[]'::json
+        ) AS "otherParticipants"
       FROM "Meeting" AS meeting
       JOIN "MeetingParticipant" AS viewer
         ON viewer."meetingId" = meeting."id" AND viewer."profileId" = ${profile.id}
-      JOIN "MeetingParticipant" AS invitee
-        ON invitee."meetingId" = meeting."id" AND invitee."profileId" <> ${profile.id}
-      JOIN "Profile" AS inviteeProfile ON inviteeProfile."id" = invitee."profileId"
+      LEFT JOIN "MeetingParticipant" AS attendee
+        ON attendee."meetingId" = meeting."id" AND attendee."profileId" <> ${profile.id}
+      LEFT JOIN "Profile" AS attendeeProfile ON attendeeProfile."id" = attendee."profileId"
       JOIN "Spot" AS spot ON spot."id" = meeting."spotId"
+      WHERE meeting."status" = 'scheduled'::"MeetingStatus"
+        AND meeting."endAt" > NOW()
+      GROUP BY meeting."id", spot."location", viewer."response"
       ORDER BY meeting."startAt" ASC
     `,
   ]);

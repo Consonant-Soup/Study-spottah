@@ -1,44 +1,104 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import swal from 'sweetalert';
+import { addSpots } from '@/lib/dbActions';
 import styles from './AddSpotForm.module.css';
 
-const MAJORS = ['Engineering', 'Bio', 'Math'] as const;
+const COVERAGE_OPTIONS = [
+  { value: 'INDOOR', label: 'Indoor' },
+  { value: 'OUTDOOR', label: 'Outdoor' },
+  { value: 'OUTDOOR_COVERED', label: 'Outdoor with Coverage' },
+] as const;
 
-const YES_NO_FIELDS = [
-  { name: 'outdoors', label: 'Outdoors' },
-  { name: 'ac', label: 'AC' },
-  { name: 'microwave', label: 'Microwave' },
-  { name: 'outlets', label: 'Outlets' },
-  { name: 'windows', label: 'Windows' },
-  { name: 'groupstudy', label: 'Group Study' },
-  { name: 'tutors', label: 'Tutors' },
-  { name: 'printer', label: 'Printer' },
-  { name: 'foodAllowed', label: 'Food Allowed' },
-  { name: 'seating', label: 'Seating' },
-  { name: 'computers', label: 'Computers' },
+const REQUIRED_AMENITIES = [
+  { name: 'outlets', label: 'Has Outlets?' },
+  { name: 'foodAllowed', label: 'Allows Food/Drink?' },
+  { name: 'microwave', label: 'Has a Microwave?' },
+  { name: 'groupstudy', label: 'Is Group Study Allowed?' },
+] as const;
+
+const OPTIONAL_AMENITIES = [
+  { name: 'ac', label: 'Has AC?' },
+  { name: 'printer', label: 'Has Printer?' },
+  { name: 'computers', label: 'Has Computer Access?' },
+  { name: 'whiteboard', label: 'Has White Board?' },
+  { name: 'projector', label: 'Has Projector w/ HDMI?' },
+  { name: 'chalkboard', label: 'Has Chalk Board?' },
+  { name: 'windows', label: 'Has Windows?' },
+  { name: 'tutors', label: 'Has TAs?' },
+  { name: 'freePaper', label: 'Has Free Paper?' },
+  { name: 'largeFormatPrinter', label: 'Has Large Format Printer?' },
+] as const;
+
+const ADJACENCY_FIELDS = [
+  { name: 'nearBathroom', label: 'Near the Bathroom?' },
+  { name: 'nearWaterFountain', label: 'Near a Water Fountain?' },
+  { name: 'nearVendingMachine', label: 'Near a Vending Machine?' },
+  { name: 'nearFoodStore', label: 'Near Food Store?' },
+  { name: 'nearBusStop', label: 'Near TheBus Stop?' },
+  { name: 'nearShuttle', label: 'Near the Rainbow Shuttle?' },
 ] as const;
 
 const AddSpotForm: React.FC = () => {
-  const [showOtherMajor, setShowOtherMajor] = useState(false);
-
-  const handleMockSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    swal('Mockup Submitted', 'This is a UI preview. No data was sent to the database.', 'info');
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    const name = data.get('name') as string;
+    if (!name?.trim()) {
+      swal('Missing Info', 'Spot name is required.', 'warning');
+      return;
+    }
+
+    const coverage = data.get('coverage') as string;
+    if (!coverage) {
+      swal('Missing Info', 'Coverage type is required.', 'warning');
+      return;
+    }
+
+    const getField = (key: string) => (data.get(key) as string) || 'unknown';
+
+    await addSpots({
+      name: name.trim(),
+      location: (data.get('location') as string)?.trim() || undefined,
+      coverage,
+      outlets: getField('outlets'),
+      foodAllowed: getField('foodAllowed'),
+      microwave: getField('microwave'),
+      groupstudy: getField('groupstudy'),
+      ac: getField('ac'),
+      printer: getField('printer'),
+      computers: getField('computers'),
+      whiteboard: getField('whiteboard'),
+      projector: getField('projector'),
+      chalkboard: getField('chalkboard'),
+      windows: getField('windows'),
+      tutors: getField('tutors'),
+      freePaper: getField('freePaper'),
+      largeFormatPrinter: getField('largeFormatPrinter'),
+      nearBathroom: getField('nearBathroom'),
+      nearWaterFountain: getField('nearWaterFountain'),
+      nearVendingMachine: getField('nearVendingMachine'),
+      nearFoodStore: getField('nearFoodStore'),
+      nearBusStop: getField('nearBusStop'),
+      nearShuttle: getField('nearShuttle'),
+      noiselvl: Number(data.get('noiselvl')) || 1,
+      imageUrl: (data.get('imageUrl') as string)?.trim() || undefined,
+      comments: (data.get('comments') as string)?.trim() || undefined,
+    });
   };
 
   return (
     <div className={styles.page}>
       <Container className="py-4">
         <Row className="justify-content-center">
-          <Col xs={12} md={6}>
+          <Col xs={12} md={8}>
             <Col className="mb-3">
               <span className={styles.eyebrow}>CONTRIBUTE</span>
-              <h2 className={styles.heading}>
-                Add a Spot
-              </h2>
+              <h2 className={styles.heading}>Add a Spot</h2>
             </Col>
 
             <Card className={`rounded-0 ${styles.card}`}>
@@ -47,15 +107,16 @@ const AddSpotForm: React.FC = () => {
               </Card.Header>
 
               <Card.Body>
-                <Form onSubmit={handleMockSubmit}>
-                  {/* Name */}
+                <Form onSubmit={handleSubmit}>
+                  {/* Name (required) */}
                   <Form.Group className="mb-3">
-                    <Form.Label className="fw-semibold">Name</Form.Label>
+                    <Form.Label className="fw-semibold">Spot Name *</Form.Label>
                     <input
                       type="text"
                       name="name"
                       placeholder="e.g., Hamilton Quiet Zone"
                       className="form-control rounded-0"
+                      required
                     />
                   </Form.Group>
 
@@ -70,74 +131,25 @@ const AddSpotForm: React.FC = () => {
                     />
                   </Form.Group>
 
-                  {/* Noise Level */}
+                  {/* Coverage (required) */}
                   <Form.Group className="mb-3">
-                    <Form.Label className="fw-semibold">
-                      Noise Level (1 = Silent, 7 = Very Loud)
-                    </Form.Label>
-                    <Form.Select name="noiselvl" defaultValue={1} className="rounded-0">
-                      <option value={1}>1 - Silent (Library Quiet Zone)</option>
-                      <option value={2}>2 - Very Quiet</option>
-                      <option value={3}>3 - Low Whisper</option>
-                      <option value={4}>4 - Moderate Background</option>
-                      <option value={5}>5 - Conversational</option>
-                      <option value={6}>6 - Lively / Group Study</option>
-                      <option value={7}>7 - Loud / High Traffic</option>
+                    <Form.Label className="fw-semibold">Coverage *</Form.Label>
+                    <Form.Select name="coverage" className="rounded-0" required>
+                      <option value="">Select coverage type...</option>
+                      {COVERAGE_OPTIONS.map((opt) => (
+                        <option key={opt.value} value={opt.value}>{opt.label}</option>
+                      ))}
                     </Form.Select>
                   </Form.Group>
 
-                  {/* Majors */}
-                  <Form.Group className="mb-3">
-                    <Form.Label className="fw-semibold">Majors</Form.Label>
-                    <div>
-                      {MAJORS.map((major) => (
-                        <div className="form-check form-check-inline" key={major}>
-                          <input
-                            className="form-check-input rounded-0"
-                            type="checkbox"
-                            id={`major-${major}`}
-                            name="majors"
-                            value={major}
-                          />
-                          <label className="form-check-label" htmlFor={`major-${major}`}>
-                            {major}
-                          </label>
-                        </div>
-                      ))}
-                      <div className="form-check form-check-inline">
-                        <input
-                          className="form-check-input rounded-0"
-                          type="checkbox"
-                          id="major-other"
-                          checked={showOtherMajor}
-                          onChange={(e) => setShowOtherMajor(e.target.checked)}
-                        />
-                        <label className="form-check-label" htmlFor="major-other">
-                          Other
-                        </label>
-                      </div>
-                    </div>
-                    {showOtherMajor && (
-                      <input
-                        type="text"
-                        name="otherMajor"
-                        placeholder="Type your major"
-                        className="form-control rounded-0 mt-2"
-                      />
-                    )}
-                  </Form.Group>
-
-                  {/* Yes / No / Unknown Fields */}
+                  {/* Required Amenities */}
+                  <h6 className="fw-bold mt-4 mb-3">Required Amenities</h6>
                   <Row>
-                    {YES_NO_FIELDS.map((field) => (
+                    {REQUIRED_AMENITIES.map((field) => (
                       <Col xs={12} sm={6} key={field.name}>
                         <Form.Group className="mb-3">
                           <Form.Label className="fw-semibold">{field.label}</Form.Label>
-                          <select
-                            name={field.name}
-                            defaultValue="unknown"
-                            className="form-select rounded-0"
-                          >
+                          <select name={field.name} defaultValue="unknown" className="form-select rounded-0">
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                             <option value="unknown">Unknown</option>
@@ -147,7 +159,75 @@ const AddSpotForm: React.FC = () => {
                     ))}
                   </Row>
 
-                  {/* Submit & Reset Buttons */}
+                  {/* Optional Amenities */}
+                  <h6 className="fw-bold mt-4 mb-3">Optional Amenities</h6>
+                  <Row>
+                    {OPTIONAL_AMENITIES.map((field) => (
+                      <Col xs={12} sm={6} key={field.name}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-semibold">{field.label}</Form.Label>
+                          <select name={field.name} defaultValue="unknown" className="form-select rounded-0">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="unknown">Unknown</option>
+                          </select>
+                        </Form.Group>
+                      </Col>
+                    ))}
+                  </Row>
+
+                  {/* Adjacency */}
+                  <h6 className="fw-bold mt-4 mb-3">Nearby</h6>
+                  <Row>
+                    {ADJACENCY_FIELDS.map((field) => (
+                      <Col xs={12} sm={6} key={field.name}>
+                        <Form.Group className="mb-3">
+                          <Form.Label className="fw-semibold">{field.label}</Form.Label>
+                          <select name={field.name} defaultValue="unknown" className="form-select rounded-0">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="unknown">Unknown</option>
+                          </select>
+                        </Form.Group>
+                      </Col>
+                    ))}
+                  </Row>
+
+                  {/* Noise Level */}
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-semibold">Noise Level *</Form.Label>
+                    <Form.Select name="noiselvl" defaultValue={1} className="rounded-0">
+                      <option value={1}>1 - Whisper (leaves rustling, AC hum)</option>
+                      <option value={2}>2 - Quiet (soft conversation)</option>
+                      <option value={3}>3 - Moderate (normal talking)</option>
+                      <option value={4}>4 - Loud (busy cafe, group chatter)</option>
+                      <option value={5}>5 - Very Loud (construction, lawnmower)</option>
+                    </Form.Select>
+                  </Form.Group>
+
+                  {/* Image URL */}
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-semibold">Image URL</Form.Label>
+                    <input
+                      type="url"
+                      name="imageUrl"
+                      placeholder="https://example.com/photo.jpg"
+                      className="form-control rounded-0"
+                    />
+                  </Form.Group>
+
+                  {/* Comments */}
+                  <Form.Group className="mb-3">
+                    <Form.Label className="fw-semibold">Comments / Notes</Form.Label>
+                    <textarea
+                      name="comments"
+                      rows={3}
+                      placeholder="Any additional notes about this spot..."
+                      className="form-control rounded-0"
+                    />
+                  </Form.Group>
+
+                  {/* Submit & Reset */}
                   <Form.Group className="form-group">
                     <Row className="pt-3">
                       <Col>

@@ -1,61 +1,81 @@
 import type { PrismaClient } from '@prisma/client';
 
 export async function seedFirstFloorSpot(prisma: Pick<PrismaClient, '$executeRaw'>) {
-  const location = 'First Floor, Hamilton Library';
+  const name = 'First Floor, Hamilton Library';
+  const location = 'Hamilton Library';
 
   await prisma.$executeRaw`
     INSERT INTO "Spot" (
+      "name",
       "location",
-      "outdoors",
-      "ac",
-      "microwave",
+      "coverage",
       "outlets",
-      "windows",
-      "groupstudy",
-      "tutors",
-      "printer",
-      "noiselvl",
       "foodAllowed",
-      "majors",
-      "seating",
-      "computers"
+      "microwave",
+      "groupstudy",
+      "ac",
+      "printer",
+      "computers",
+      "whiteboard",
+      "projector",
+      "chalkboard",
+      "windows",
+      "tutors",
+      "freePaper",
+      "largeFormatPrinter",
+      "nearBathroom",
+      "nearWaterFountain",
+      "nearVendingMachine",
+      "nearFoodStore",
+      "nearBusStop",
+      "nearShuttle",
+      "noiselvl"
     )
     SELECT
+      ${name},
       ${location},
-      'no'::"YesNoUnknown",
+      'INDOOR'::"Coverage",
       'yes'::"YesNoUnknown",
+      'no'::"YesNoUnknown",
       'unknown'::"YesNoUnknown",
       'yes'::"YesNoUnknown",
       'yes'::"YesNoUnknown",
       'yes'::"YesNoUnknown",
       'yes'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
       'yes'::"YesNoUnknown",
-      '3'::"NoiseLevel",
-      'no'::"YesNoUnknown",
-      ARRAY['Engineering', 'Bio', 'Math']::"Major"[],
       'yes'::"YesNoUnknown",
-      'yes'::"YesNoUnknown"
+      'unknown'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      'yes'::"YesNoUnknown",
+      'yes'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      'unknown'::"YesNoUnknown",
+      '3'::"NoiseLevel"
     WHERE NOT EXISTS (
-      SELECT 1 FROM "Spot" WHERE "location" = ${location}
+      SELECT 1 FROM "Spot" WHERE "name" = ${name}
     )
   `;
 
   await prisma.$executeRaw`
     UPDATE "Spot"
     SET
-      "outdoors" = 'no'::"YesNoUnknown",
-      "ac" = 'yes'::"YesNoUnknown",
-      "microwave" = 'unknown'::"YesNoUnknown",
+      "location" = ${location},
+      "coverage" = 'INDOOR'::"Coverage",
       "outlets" = 'yes'::"YesNoUnknown",
-      "windows" = 'yes'::"YesNoUnknown",
-      "groupstudy" = 'yes'::"YesNoUnknown",
-      "tutors" = 'yes'::"YesNoUnknown",
-      "printer" = 'yes'::"YesNoUnknown",
-      "noiselvl" = '3'::"NoiseLevel",
       "foodAllowed" = 'no'::"YesNoUnknown",
-      "majors" = ARRAY['Engineering', 'Bio', 'Math']::"Major"[],
-      "seating" = 'yes'::"YesNoUnknown",
-      "computers" = 'yes'::"YesNoUnknown"
-    WHERE "location" = ${location}
+      "microwave" = 'unknown'::"YesNoUnknown",
+      "groupstudy" = 'yes'::"YesNoUnknown",
+      "ac" = 'yes'::"YesNoUnknown",
+      "printer" = 'yes'::"YesNoUnknown",
+      "computers" = 'yes'::"YesNoUnknown",
+      "windows" = 'yes'::"YesNoUnknown",
+      "tutors" = 'yes'::"YesNoUnknown",
+      "noiselvl" = '3'::"NoiseLevel"
+    WHERE "name" = ${name}
   `;
 }

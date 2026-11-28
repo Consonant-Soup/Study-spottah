@@ -73,33 +73,59 @@ enum NoiseLevel {
   LEVEL_3 @map("3")
   LEVEL_4 @map("4")
   LEVEL_5 @map("5")
-  LEVEL_6 @map("6")
-  LEVEL_7 @map("7")
 }
 
-enum Major {
-  Engineering
-  Bio
-  Math
+enum Coverage {
+  INDOOR
+  OUTDOOR
+  OUTDOOR_COVERED
+}
+
+enum SpotStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 model Spot {
-  id          Int          @id @default(autoincrement())
-  location    String
-  outdoors    YesNoUnknown @default(unknown)
-  ac          YesNoUnknown @default(unknown)
-  microwave   YesNoUnknown @default(unknown)
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now()) @db.Timestamptz(3)
+  status    SpotStatus @default(PENDING)
+  name      String
+  location  String?
+  coverage  Coverage
+
+  // Required amenities
   outlets     YesNoUnknown @default(unknown)
-  windows     YesNoUnknown @default(unknown)
-  groupstudy  YesNoUnknown @default(unknown)
-  tutors      YesNoUnknown @default(unknown)
-  printer     YesNoUnknown @default(unknown)
-  noiselvl    NoiseLevel
   foodAllowed YesNoUnknown @default(unknown)
-  majors      Major[]
-  seating     YesNoUnknown @default(unknown)
-  computers   YesNoUnknown @default(unknown)
-  meetings    Meeting[]
+  microwave   YesNoUnknown @default(unknown)
+  groupstudy  YesNoUnknown @default(unknown)
+
+  // Optional amenities
+  ac                 YesNoUnknown @default(unknown)
+  printer            YesNoUnknown @default(unknown)
+  computers          YesNoUnknown @default(unknown)
+  whiteboard         YesNoUnknown @default(unknown)
+  projector          YesNoUnknown @default(unknown)
+  chalkboard         YesNoUnknown @default(unknown)
+  windows            YesNoUnknown @default(unknown)
+  tutors             YesNoUnknown @default(unknown)
+  freePaper          YesNoUnknown @default(unknown)
+  largeFormatPrinter YesNoUnknown @default(unknown)
+
+  // Adjacency
+  nearBathroom       YesNoUnknown @default(unknown)
+  nearWaterFountain  YesNoUnknown @default(unknown)
+  nearVendingMachine YesNoUnknown @default(unknown)
+  nearFoodStore      YesNoUnknown @default(unknown)
+  nearBusStop        YesNoUnknown @default(unknown)
+  nearShuttle        YesNoUnknown @default(unknown)
+
+  noiselvl NoiseLevel
+  imageUrl String?
+  comments String?
+
+  meetings Meeting[]
 }
 
 enum MeetingStatus {

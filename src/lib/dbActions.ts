@@ -1,6 +1,6 @@
 'use server';
 
-import { Condition, YesNoUnknown, NoiseLevel, Major, Standing, Prisma } from '@prisma/client';
+import { Condition, YesNoUnknown, NoiseLevel, Coverage, SpotStatus, Standing, Prisma } from '@prisma/client';
 import { Stuff } from '@prisma/client';
 import { hash } from 'bcrypt';
 import { redirect } from 'next/navigation';
@@ -40,8 +40,6 @@ const noiseLevelMap: Record<number, NoiseLevel> = {
   3: NoiseLevel.LEVEL_3,
   4: NoiseLevel.LEVEL_4,
   5: NoiseLevel.LEVEL_5,
-  6: NoiseLevel.LEVEL_6,
-  7: NoiseLevel.LEVEL_7,
 };
 
 function toYesNoUnknown(value: string): YesNoUnknown {
@@ -60,48 +58,73 @@ function standing(value: string): Standing {
   return Standing.freshman;
 };
 
-/**
- * Adds a new location to the database.
- * @param spot, an object with the following properties:
- *  location
- *  outdoors
- *  ac
- *  microwave
- *  windows
- *  outlests
- *  groupstudy
- *  tutors
- *  printer
- *  noise level
- *  is food allowd
- *  majors
- *  setaing
- *  computers
- */
-export async function addSpots(spot: { location: string; outdoors: string, ac: string, microwave: string, outlets: string, windows: string, groupstudy: string, tutors: string, printer: string, noiselvl: number, foodAllowed: string, majors: string[], seating: string, computers:string}) {
-  // console.log(`addStuff data: ${JSON.stringify(stuff, null, 2)}`);
+function toCoverage(value: string): Coverage {
+  if (value === 'OUTDOOR') return Coverage.OUTDOOR;
+  if (value === 'OUTDOOR_COVERED') return Coverage.OUTDOOR_COVERED;
+  return Coverage.INDOOR;
+}
+
+export async function addSpots(spot: {
+  name: string;
+  location?: string;
+  coverage: string;
+  outlets: string;
+  foodAllowed: string;
+  microwave: string;
+  groupstudy: string;
+  ac: string;
+  printer: string;
+  computers: string;
+  whiteboard: string;
+  projector: string;
+  chalkboard: string;
+  windows: string;
+  tutors: string;
+  freePaper: string;
+  largeFormatPrinter: string;
+  nearBathroom: string;
+  nearWaterFountain: string;
+  nearVendingMachine: string;
+  nearFoodStore: string;
+  nearBusStop: string;
+  nearShuttle: string;
+  noiselvl: number;
+  imageUrl?: string;
+  comments?: string;
+}) {
   const mappedNoise = noiseLevelMap[spot.noiselvl] ?? NoiseLevel.LEVEL_1;
 
   await prisma.spot.create({
     data: {
-      location: spot.location,
-      outdoors: toYesNoUnknown(spot.outdoors),
-      ac: toYesNoUnknown(spot.ac),
-      microwave: toYesNoUnknown(spot.microwave),
+      name: spot.name,
+      location: spot.location || null,
+      coverage: toCoverage(spot.coverage),
       outlets: toYesNoUnknown(spot.outlets),
-      windows: toYesNoUnknown(spot.windows),
-      groupstudy: toYesNoUnknown(spot.groupstudy),
-      tutors: toYesNoUnknown(spot.tutors),
-      printer: toYesNoUnknown(spot.printer),
-      noiselvl: mappedNoise,
       foodAllowed: toYesNoUnknown(spot.foodAllowed),
-      majors: spot.majors as Major[],
-      seating: toYesNoUnknown(spot.seating),
+      microwave: toYesNoUnknown(spot.microwave),
+      groupstudy: toYesNoUnknown(spot.groupstudy),
+      ac: toYesNoUnknown(spot.ac),
+      printer: toYesNoUnknown(spot.printer),
       computers: toYesNoUnknown(spot.computers),
+      whiteboard: toYesNoUnknown(spot.whiteboard),
+      projector: toYesNoUnknown(spot.projector),
+      chalkboard: toYesNoUnknown(spot.chalkboard),
+      windows: toYesNoUnknown(spot.windows),
+      tutors: toYesNoUnknown(spot.tutors),
+      freePaper: toYesNoUnknown(spot.freePaper),
+      largeFormatPrinter: toYesNoUnknown(spot.largeFormatPrinter),
+      nearBathroom: toYesNoUnknown(spot.nearBathroom),
+      nearWaterFountain: toYesNoUnknown(spot.nearWaterFountain),
+      nearVendingMachine: toYesNoUnknown(spot.nearVendingMachine),
+      nearFoodStore: toYesNoUnknown(spot.nearFoodStore),
+      nearBusStop: toYesNoUnknown(spot.nearBusStop),
+      nearShuttle: toYesNoUnknown(spot.nearShuttle),
+      noiselvl: mappedNoise,
+      imageUrl: spot.imageUrl || null,
+      comments: spot.comments || null,
     },
   });
-  // After adding, redirect to the list of study spots as a card 
-  redirect('/list');
+  redirect('/spots/study-spot-overview');
 }
 
 export async function addProfiles(profile: {
@@ -250,4 +273,36 @@ export async function deleteSpot(id: number) {
   });
   revalidatePath('/profile');
   revalidatePath('/spots');
+}
+
+export async function approveSpot(id: number) {
+  await prisma.spot.update({
+    where: { id },
+    data: { status: SpotStatus.APPROVED },
+  });
+  revalidatePath('/admin');
+  revalidatePath('/spots');
+}
+
+export async function rejectSpot(id: number) {
+  await prisma.spot.update({
+    where: { id },
+    data: { status: SpotStatus.REJECTED },
+  });
+  revalidatePath('/admin');
+  revalidatePath('/spots');
+}
+
+export async function getPendingSpots() {
+  return prisma.spot.findMany({
+    where: { status: SpotStatus.PENDING },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
+export async function getApprovedSpots() {
+  return prisma.spot.findMany({
+    where: { status: SpotStatus.APPROVED },
+    orderBy: { createdAt: 'desc' },
+  });
 }

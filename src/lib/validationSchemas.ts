@@ -12,31 +12,40 @@ const yesNoUnknownField = Yup.string()
   .oneOf(['yes', 'no', 'unknown'], 'Please select yes, no, or unknown')
   .required('This field is required');
 
-const validMajors = ['Engineering', 'Bio', 'Math'] as const;
-
 export const AddSpotSchema = Yup.object({
-  location: Yup.string().required('Location is required'),
-  outdoors: yesNoUnknownField,
-  ac: yesNoUnknownField,
-  microwave: yesNoUnknownField,
+  name: Yup.string().required('Spot name is required'),
+  location: Yup.string().optional(),
+  coverage: Yup.string()
+    .oneOf(['INDOOR', 'OUTDOOR', 'OUTDOOR_COVERED'], 'Please select a coverage type')
+    .required('Coverage is required'),
   outlets: yesNoUnknownField,
-  windows: yesNoUnknownField,
+  foodAllowed: yesNoUnknownField,
+  microwave: yesNoUnknownField,
   groupstudy: yesNoUnknownField,
-  tutors: yesNoUnknownField,
+  ac: yesNoUnknownField,
   printer: yesNoUnknownField,
+  computers: yesNoUnknownField,
+  whiteboard: yesNoUnknownField,
+  projector: yesNoUnknownField,
+  chalkboard: yesNoUnknownField,
+  windows: yesNoUnknownField,
+  tutors: yesNoUnknownField,
+  freePaper: yesNoUnknownField,
+  largeFormatPrinter: yesNoUnknownField,
+  nearBathroom: yesNoUnknownField,
+  nearWaterFountain: yesNoUnknownField,
+  nearVendingMachine: yesNoUnknownField,
+  nearFoodStore: yesNoUnknownField,
+  nearBusStop: yesNoUnknownField,
+  nearShuttle: yesNoUnknownField,
   noiselvl: Yup.number()
     .typeError('Noise level must be a number')
     .integer('Noise level must be a whole number')
-    .min(1, 'Noise level must be between 1 and 7')
-    .max(7, 'Noise level must be between 1 and 7')
+    .min(1, 'Noise level must be between 1 and 5')
+    .max(5, 'Noise level must be between 1 and 5')
     .required('Noise level is required'),
-  foodAllowed: yesNoUnknownField,
-  majors: Yup.array()
-    .of(Yup.string().oneOf(validMajors).required())
-    .min(1, 'Select at least one major')
-    .required('Majors is required'),
-  seating: yesNoUnknownField,
-  computers: yesNoUnknownField,
+  imageUrl: Yup.string().url('Must be a valid URL').optional(),
+  comments: Yup.string().optional(),
 });
 
 export const EditStuffSchema = Yup.object({

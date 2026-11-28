@@ -91,9 +91,12 @@ model Spot {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now()) @db.Timestamptz(3)
   status    SpotStatus @default(PENDING)
-  name      String
-  location  String?
-  coverage  Coverage
+  name        String
+  description String?
+  location    String?
+  lat         Float?
+  lng         Float?
+  coverage    Coverage
 
   // Required amenities
   outlets     YesNoUnknown @default(unknown)

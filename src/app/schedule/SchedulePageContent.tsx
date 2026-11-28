@@ -3,13 +3,14 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Col, Container, Row } from 'react-bootstrap';
+import type { Spot } from '@prisma/client';
 import SpotsSection from '@/components/spots/SpotsSection';
 import type { ScheduleMeeting } from '@/components/ScheduleInvitesPanel';
 import ScheduleInvitesPanel from '@/components/ScheduleInvitesPanel';
 import styles from './page.module.css';
 
 type SchedulePageContentProps = {
-  spots: { id: number; location: string }[];
+  spots: Spot[];
   meetings: ScheduleMeeting[];
 };
 
@@ -18,7 +19,7 @@ const SchedulePageContent = ({ spots, meetings }: SchedulePageContentProps) => {
   const [spotError, setSpotError] = useState('');
 
   const handleSpotSelect = (spotName: string) => {
-    const spot = spots.find((entry) => entry.location === spotName);
+    const spot = spots.find((entry) => entry.name === spotName);
     if (!spot) {
       setSpotError('This spot is not in the database yet. Choose another spot.');
       return;
@@ -53,7 +54,7 @@ const SchedulePageContent = ({ spots, meetings }: SchedulePageContentProps) => {
                 Switch to list view to choose a spot, then select a date, time, and attendees.
               </p>
               {spotError && <p className={styles.sectionIntro} role="alert">{spotError}</p>}
-              <SpotsSection onSpotSelect={handleSpotSelect} />
+              <SpotsSection spots={spots} onSpotSelect={handleSpotSelect} />
             </section>
           </Col>
           <Col lg={5}>

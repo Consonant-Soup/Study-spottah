@@ -1,9 +1,10 @@
-import studySpots from '@/components/spots/spotData';
+import { getApprovedSpots } from '@/lib/dbActions';
 import StudySpotDetailsList from './StudySpotDetailsList';
 import styles from './page.module.css';
 
-/** Show the campus study spots without requiring a database connection. */
-export default function StudySpotOverview() {
+export default async function StudySpotOverview() {
+  const spots = await getApprovedSpots();
+
   return (
     <main className={styles.page}>
       <div className={styles.content}>
@@ -13,10 +14,10 @@ export default function StudySpotOverview() {
           <p>Review location, amenities, and study conditions for each spot.</p>
         </header>
 
-        {studySpots.length === 0 ? (
+        {spots.length === 0 ? (
           <p className={styles.empty}>There are no study spots to display yet.</p>
         ) : (
-          <StudySpotDetailsList spots={studySpots} />
+          <StudySpotDetailsList spots={spots} />
         )}
       </div>
     </main>

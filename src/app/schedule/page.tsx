@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth';
 import { loggedInProtectedPage } from '@/lib/page-protection';
 import { prisma } from '@/lib/prisma';
+import { getApprovedSpots } from '@/lib/dbActions';
 import { findProfileByEmail } from '@/lib/profile-queries';
 import { redirect } from 'next/navigation';
 import SchedulePageContent from './SchedulePageContent';
@@ -35,12 +36,8 @@ const SchedulePage = async () => {
   const profile = await findProfileByEmail(email);
   if (!profile) redirect('/profile');
 
-  const [spots, rows] = await Promise.all([
-    prisma.$queryRaw<{ id: number; location: string }[]>`
-      SELECT "id", "location"
-      FROM "Spot"
-      ORDER BY "location" ASC
-    `,
+  const [approvedSpots, rows] = await Promise.all([
+    getApprovedSpots(),
     prisma.$queryRaw<ScheduleMeetingRow[]>`
       SELECT
         meeting."id",
@@ -81,7 +78,7 @@ const SchedulePage = async () => {
     endAt: meeting.endAt.toISOString(),
   }));
 
-  return <SchedulePageContent spots={spots} meetings={meetings} />;
+  return <SchedulePageContent spots={approvedSpots} meetings={meetings} />;
 };
 
 export default SchedulePage;

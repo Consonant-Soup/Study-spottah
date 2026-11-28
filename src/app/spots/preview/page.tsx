@@ -47,7 +47,7 @@ export default function SpotsPreview() {
           List
         </button>
       </div>
-      {view === 'map' ? <StudySpotsMap /> : <StudySpotsList />}
+      {view === 'map' ? <StudySpotsMap spots={[]} /> : <StudySpotsList spots={[]} />}
     </div>
   );
 }

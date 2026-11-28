@@ -6,9 +6,12 @@
 
 import { MapPin, Filter, Clock, BookOpen, Coffee, Users, ArrowUpRight } from 'lucide-react';
 import SpotsSection from '@/components/spots/SpotsSection';
+import { getApprovedSpots } from '@/lib/dbActions';
 import styles from './page.module.css';
 
-const Home = () => (
+const Home = async () => {
+  const spots = await getApprovedSpots();
+  return (
   <main className={styles.page}>
     {/* Purple accent bar */}
     <div className={styles.topline}>
@@ -76,7 +79,7 @@ const Home = () => (
             <h2>Where to study<span className={styles.titleStar}>*</span></h2>
           </div>
         </div>
-        <SpotsSection />
+        <SpotsSection spots={spots} />
       </section>
 
       {/* Tips section */}
@@ -116,6 +119,7 @@ const Home = () => (
       </section>
     </div>
   </main>
-);
+  );
+};
 
 export default Home;

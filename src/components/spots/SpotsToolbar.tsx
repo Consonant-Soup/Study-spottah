@@ -7,7 +7,7 @@
 
 import { useCallback } from 'react';
 import { SlidersHorizontal } from 'lucide-react';
-import { TAG_ORDER } from './spotData';
+import { TAG_ORDER } from './spotHelpers';
 import styles from './SpotsToolbar.module.css';
 
 export type SpotsView = 'map' | 'list';

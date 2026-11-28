@@ -66,7 +66,10 @@ function toCoverage(value: string): Coverage {
 
 export async function addSpots(spot: {
   name: string;
+  description?: string;
   location?: string;
+  lat?: number;
+  lng?: number;
   coverage: string;
   outlets: string;
   foodAllowed: string;
@@ -97,7 +100,10 @@ export async function addSpots(spot: {
   await prisma.spot.create({
     data: {
       name: spot.name,
+      description: spot.description || null,
       location: spot.location || null,
+      lat: spot.lat ?? null,
+      lng: spot.lng ?? null,
       coverage: toCoverage(spot.coverage),
       outlets: toYesNoUnknown(spot.outlets),
       foodAllowed: toYesNoUnknown(spot.foodAllowed),

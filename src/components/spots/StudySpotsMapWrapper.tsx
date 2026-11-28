@@ -1,16 +1,8 @@
-/**
- * StudySpotsMapWrapper.tsx
- * Dynamic import wrapper for the Leaflet map component.
- * Leaflet accesses `window` on import, so it must be loaded client-side only.
- * Next.js dynamic() with ssr: false handles this.
- */
-
 'use client';
 
 import dynamic from 'next/dynamic';
-import type { StudySpot } from './spotData';
+import type { Spot } from '@prisma/client';
 
-/** Dynamically import the map — no server-side rendering */
 const StudySpotsMapInner = dynamic(() => import('./StudySpotsMap'), {
   ssr: false,
   loading: () => (
@@ -32,14 +24,12 @@ const StudySpotsMapInner = dynamic(() => import('./StudySpotsMap'), {
   ),
 });
 
-/** Props passed through to the inner map component */
 type StudySpotsMapWrapperProps = {
-  spots?: StudySpot[];
+  spots: Spot[];
   center?: [number, number];
   zoom?: number;
 };
 
-/** Wrapper that forwards props to the dynamically imported map */
 export default function StudySpotsMapWrapper({ spots, center, zoom }: StudySpotsMapWrapperProps) {
   return <StudySpotsMapInner spots={spots} center={center} zoom={zoom} />;
 }

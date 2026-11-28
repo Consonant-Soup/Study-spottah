@@ -1,20 +1,14 @@
-/**
- * StudySpotsMap.tsx
- * Leaflet map with study spot markers and popups showing tags + live data.
- * Loaded via dynamic import to avoid SSR issues.
- */
-
 'use client';
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import studySpots from './spotData';
-import type { StudySpot } from './spotData';
+import type { Spot } from '@prisma/client';
+import { getSpotTags, getNoiseNumber } from './spotHelpers';
 import styles from './StudySpotsMap.module.css';
 
 type StudySpotsMapProps = {
-  spots?: StudySpot[];
+  spots: Spot[];
   center?: [number, number];
   zoom?: number;
 };
@@ -31,30 +25,33 @@ function createSpotIcon(): L.DivIcon {
   });
 }
 
-function SpotPopup({ spot }: { spot: StudySpot }) {
+function SpotPopup({ spot }: { spot: Spot }) {
+  const tags = getSpotTags(spot);
+  const noise = getNoiseNumber(spot);
+
   return (
     <div className={styles.popup}>
       <h4 className={styles.popupTitle}>{spot.name}</h4>
-      <p className={styles.popupDesc}>{spot.description}</p>
+      {spot.description && <p className={styles.popupDesc}>{spot.description}</p>}
       <div className={styles.popupTags}>
-        {spot.tags.filter((t) => !t.startsWith('No ')).map((tag) => (
+        {tags.map((tag) => (
           <span key={tag} className={styles.tag}>{tag}</span>
         ))}
       </div>
       <div className={styles.popupLive}>
-        <span>Noise: {spot.noiseLevel}/7</span>
-        <span>Seating: {spot.seating}</span>
+        <span>Noise: {noise}/5</span>
       </div>
     </div>
   );
 }
 
 export default function StudySpotsMap({
-  spots = studySpots,
+  spots,
   center = UH_MANOA_CENTER,
   zoom = DEFAULT_ZOOM,
 }: StudySpotsMapProps) {
   const spotIcon = createSpotIcon();
+  const mappableSpots = spots.filter((s) => s.lat != null && s.lng != null);
 
   return (
     <div className={styles.mapContainer}>
@@ -69,8 +66,8 @@ export default function StudySpotsMap({
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {spots.map((spot) => (
-          <Marker key={spot.id} position={[spot.lat, spot.lng]} icon={spotIcon}>
+        {mappableSpots.map((spot) => (
+          <Marker key={spot.id} position={[spot.lat!, spot.lng!]} icon={spotIcon}>
             <Popup>
               <SpotPopup spot={spot} />
             </Popup>

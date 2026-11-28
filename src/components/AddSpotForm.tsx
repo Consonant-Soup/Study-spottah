@@ -61,15 +61,10 @@ const AddSpotForm: React.FC = () => {
 
     const getField = (key: string) => (data.get(key) as string) || 'unknown';
 
-    const latStr = (data.get('lat') as string)?.trim();
-    const lngStr = (data.get('lng') as string)?.trim();
-
     await addSpots({
       name: name.trim(),
       description: (data.get('description') as string)?.trim() || undefined,
       location: (data.get('location') as string)?.trim() || undefined,
-      lat: latStr ? parseFloat(latStr) : undefined,
-      lng: lngStr ? parseFloat(lngStr) : undefined,
       coverage,
       outlets: getField('outlets'),
       foodAllowed: getField('foodAllowed'),
@@ -147,34 +142,6 @@ const AddSpotForm: React.FC = () => {
                       className="form-control rounded-0"
                     />
                   </Form.Group>
-
-                  {/* Coordinates */}
-                  <Row>
-                    <Col xs={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-semibold">Latitude</Form.Label>
-                        <input
-                          type="number"
-                          step="any"
-                          name="lat"
-                          placeholder="e.g., 21.2990"
-                          className="form-control rounded-0"
-                        />
-                      </Form.Group>
-                    </Col>
-                    <Col xs={6}>
-                      <Form.Group className="mb-3">
-                        <Form.Label className="fw-semibold">Longitude</Form.Label>
-                        <input
-                          type="number"
-                          step="any"
-                          name="lng"
-                          placeholder="e.g., -157.8175"
-                          className="form-control rounded-0"
-                        />
-                      </Form.Group>
-                    </Col>
-                  </Row>
 
                   {/* Coverage (required) */}
                   <Form.Group className="mb-3">

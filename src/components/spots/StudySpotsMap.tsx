@@ -1,10 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Spot } from '@prisma/client';
-import { getSpotTags, getNoiseNumber } from './spotHelpers';
+import { getSpotTags, getNoiseNumber, toSlug } from './spotHelpers';
 import styles from './StudySpotsMap.module.css';
 
 type StudySpotsMapProps = {
@@ -41,6 +42,9 @@ function SpotPopup({ spot }: { spot: Spot }) {
       <div className={styles.popupLive}>
         <span>Noise: {noise}/5</span>
       </div>
+      <Link href={`/spots/${toSlug(spot.name)}`} className={styles.popupLink}>
+        View details
+      </Link>
     </div>
   );
 }

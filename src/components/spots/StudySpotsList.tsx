@@ -1,7 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import type { Spot } from '@prisma/client';
-import { getSpotTags, getNoiseNumber, noiseLabel } from './spotHelpers';
+import { getSpotTags, getNoiseNumber, noiseLabel, toSlug } from './spotHelpers';
 import styles from './StudySpotsList.module.css';
 
 type StudySpotsListProps = {
@@ -56,7 +57,13 @@ function SpotCard({ spot, onSelect }: { spot: Spot; onSelect?: (spot: Spot) => v
     );
   }
 
-  return <li className={styles.row}>{inner}</li>;
+  return (
+    <li className={styles.row}>
+      <Link href={`/spots/${toSlug(spot.name)}`} className={styles.rowLink}>
+        {inner}
+      </Link>
+    </li>
+  );
 }
 
 export default function StudySpotsList({ spots, onSpotSelect }: StudySpotsListProps) {

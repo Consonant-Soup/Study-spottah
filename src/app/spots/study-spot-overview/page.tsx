@@ -10,7 +10,7 @@ export default async function StudySpotOverview() {
       <div className={styles.content}>
         <header className={styles.header}>
           <p className={styles.eyebrow}>Study Spottah</p>
-          <h1>Study spot details</h1>
+          <h1>Detailed List of All Study Spots</h1>
           <p>Review location, amenities, and study conditions for each spot.</p>
         </header>
 

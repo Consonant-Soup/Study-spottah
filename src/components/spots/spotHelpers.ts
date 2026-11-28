@@ -1,5 +1,9 @@
 import type { Spot } from '@prisma/client';
 
+export function toSlug(name: string): string {
+  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+}
+
 export const TAG_ORDER = [
   'Indoor', 'Outdoor', 'Outdoor Covered',
   'AC', 'Outlets', 'Food Allowed', 'Microwave',

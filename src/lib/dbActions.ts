@@ -309,6 +309,6 @@ export async function getPendingSpots() {
 export async function getApprovedSpots() {
   return prisma.spot.findMany({
     where: { status: SpotStatus.APPROVED },
-    orderBy: { createdAt: 'desc' },
+    orderBy: { id: 'asc' },
   });
 }
